@@ -32,24 +32,50 @@ angular.module('starter.controllers', [])
   // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
     console.log('Doing login', $scope.loginData);
-
-    // Simulate a login delay. Remove this and replace with your login
-    // code if using a login system
-    $timeout(function() {
-      $scope.closeLogin();
-    }, 1000);
+    Parse.User.logIn($scope.loginData.username, $scope.loginData.password,{
+      success: function(user){
+        alert("logged In");
+        $scope.closeLogin();
+      },
+      error:function(user,error){
+        alert(error.message);
+      }
+    });
+   
+    
+    
+    
   };
 })
 
 .controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
+  $scope.playlists = [];
+  var buyerQuery = new Parse.Query("Buyer");
+  var user = Parse.User.current();
+  buyerQuery.equalTo("author",user);
+  buyerQuery.find({
+    success: function(results) {
+      //alert("Successfully retrieved " + results.length + " buy posts.");
+      // Do something with the returned Parse.Object values
+      for (var i = 0; i < results.length; i++) {
+        var object = results[i].toJSON();
+        $scope.playlists.push(object);
+        //alert(object.objectId + ' - ' + object.title);
+      }
+      $scope.playlists = results.toJSON();
+    },
+    error: function(error) {
+      alert("Error: " + error.code + " " + error.message);
+    }
+  });
+  /*$scope.playlists = [
+    { title: 'Reggae', objectId: 1 },
+    { title: 'Chill', objectId: 2 },
+    { title: 'Dubstep', objectId: 3 },
+    { title: 'Indie', objectId: 4 },
+    { title: 'Rap', objectId: 5 },
+    { title: 'Cowbell', objectId: 6 }
+  ];*/
 })
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
