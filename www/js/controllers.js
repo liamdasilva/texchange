@@ -11,6 +11,8 @@ angular.module('starter.controllers', [])
   
   // Form data for the login modal
   $scope.loginData = {};
+  $scope.loginData.username="";
+  $scope.loginData.password="";
 
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -41,15 +43,11 @@ angular.module('starter.controllers', [])
         alert(error.message);
       }
     });
-   
-    
-    
-    
   };
 })
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [];
+.controller('BuyingCtrl', function($scope) {
+  $scope.buying = [];
   var buyerQuery = new Parse.Query("Buyer");
   var user = Parse.User.current();
   buyerQuery.equalTo("author",user);
@@ -59,23 +57,15 @@ angular.module('starter.controllers', [])
       // Do something with the returned Parse.Object values
       for (var i = 0; i < results.length; i++) {
         var object = results[i].toJSON();
-        $scope.playlists.push(object);
+        $scope.buying.push(object);
         //alert(object.objectId + ' - ' + object.title);
       }
-      $scope.playlists = results.toJSON();
+      $scope.buying = results.toJSON();
     },
     error: function(error) {
       alert("Error: " + error.code + " " + error.message);
     }
   });
-  /*$scope.playlists = [
-    { title: 'Reggae', objectId: 1 },
-    { title: 'Chill', objectId: 2 },
-    { title: 'Dubstep', objectId: 3 },
-    { title: 'Indie', objectId: 4 },
-    { title: 'Rap', objectId: 5 },
-    { title: 'Cowbell', objectId: 6 }
-  ];*/
 })
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
