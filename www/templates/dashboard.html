@@ -1,0 +1,22 @@
+<ion-view view-title="Dashboard">
+  <ion-content>
+    <ion-list>
+    	<ion-item class = "item-divider">
+      		Buying
+  	  	</ion-item>
+	    <ion-item ng-repeat="buyPost in buying" href="#/app/dashboard/singleBuy/{{buyPost.objectId}}">
+	    	{{buyPost.courseCode}}
+	        - {{buyPost.title}}
+	    </ion-item>
+    </ion-list>
+    <ion-list>
+	    <ion-item class = "item-divider">
+	    	Selling
+	  	</ion-item>
+	  	<ion-item ng-repeat="sellPost in selling" href="#/app/dashboard/singleSell/{{sellPost.objectId}}">
+	    	{{sellPost.courseCode}}
+	        - {{sellPost.title}}
+	    </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

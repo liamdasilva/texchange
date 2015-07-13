@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('app.controllers', [])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
   
@@ -46,27 +46,30 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('BuyingCtrl', function($scope) {
+.controller('DashboardCtrl', function($scope) {
   $scope.buying = [];
-  var buyerQuery = new Parse.Query("Buyer");
+  $scope.selling = [];
   var user = Parse.User.current();
-  buyerQuery.equalTo("author",user);
-  buyerQuery.find({
-    success: function(results) {
-      //alert("Successfully retrieved " + results.length + " buy posts.");
-      // Do something with the returned Parse.Object values
-      for (var i = 0; i < results.length; i++) {
-        var object = results[i].toJSON();
-        $scope.buying.push(object);
-        //alert(object.objectId + ' - ' + object.title);
-      }
-      $scope.buying = results.toJSON();
-    },
-    error: function(error) {
-      alert("Error: " + error.code + " " + error.message);
-    }
-  });
+  $scope.buying = getPostings("Buyer",user);
+  $scope.selling = getPostings("Seller",user);
+  // var buyerQuery = new Parse.Query("Buyer");
+  // buyerQuery.equalTo("author",user);
+  // buyerQuery.find({
+  //   success: function(results) {
+  //     //alert("Successfully retrieved " + results.length + " buy posts.");
+  //     // Do something with the returned Parse.Object values
+  //     for (var i = 0; i < results.length; i++) {
+  //       var object = results[i].toJSON();
+  //       $scope.buying.push(object);
+  //       //alert(object.objectId + ' - ' + object.title);
+  //     }
+  //   },
+  //   error: function(error) {
+  //     alert("Error: " + error.code + " " + error.message);
+  //   }
+  // });
+
 })
 
-.controller('PlaylistCtrl', function($scope, $stateParams) {
+.controller('SingleBuyEntryCtrl', function($scope, $stateParams) {
 });
