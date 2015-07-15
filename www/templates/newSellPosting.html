@@ -1,0 +1,20 @@
+<ion-view view-title="New Sell Posting">
+  <ion-content class = "padding">
+    <form>
+      <ion-list ion-list-inset>
+        <label class="item item-input">
+          <span class="input-label">Username</span>
+          <input type="text" ng-model="loginData.username">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Password</span>
+          <input type="password" ng-model="loginData.password">
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" ng-click="save()">Save</button>
+          <button class="button button-block button-positive" ng-click="post()">Post</button>
+        </label>
+      </ion-list>
+    </form>
+  </ion-content>
+</ion-view>

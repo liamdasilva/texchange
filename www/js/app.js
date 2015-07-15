@@ -20,7 +20,8 @@ angular.module('app', ['ionic', 'app.controllers'])
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(['$stateProvider','$urlRouterProvider',
+  function($stateProvider, $urlRouterProvider) {
   $stateProvider
 
   .state('app', {
@@ -57,8 +58,28 @@ angular.module('app', ['ionic', 'app.controllers'])
     }
   })
 
+  .state('app.newBuyPosting', {
+    url: "/newBuyPosting",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/newBuyPosting.html",
+        controller: 'NewBuyPostingCtrl'
+      }
+    }
+  })
+
+  .state('app.newSellPosting', {
+    url: "/newSellPosting",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/newSellPosting.html",
+        controller: 'NewSellPostingCtrl'
+      }
+    }
+  })
+
   .state('app.singleBuyEntry', {
-    url: "/dashboard/singleBuy/:objectId",
+    url: "/singleBuy/:objectId",
     views: {
       'menuContent': {
         templateUrl: "templates/singleBuyEntry.html",
@@ -68,7 +89,7 @@ angular.module('app', ['ionic', 'app.controllers'])
   })
 
   .state('app.singleSellEntry', {
-    url: "/dashboard/singleSell/:objectId",
+    url: "/singleSell/:objectId",
     views: {
       'menuContent': {
         templateUrl: "templates/singleSellEntry.html",
@@ -78,4 +99,4 @@ angular.module('app', ['ionic', 'app.controllers'])
   });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/dashboard');
-});
+}]);

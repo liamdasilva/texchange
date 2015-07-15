@@ -1,22 +1,32 @@
 <ion-view view-title="Dashboard">
-  <ion-content>
+  <ion-content class = "padding">
     <ion-list>
     	<ion-item class = "item-divider">
-      		Buying
+      		You're Buying
   	  	</ion-item>
-	    <ion-item ng-repeat="buyPost in buying" href="#/app/dashboard/singleBuy/{{buyPost.objectId}}">
+	    <ion-item ng-repeat="buyPost in buying" href="#/app/singleBuy/{{buyPost.objectId}}">
 	    	{{buyPost.courseCode}}
 	        - {{buyPost.title}}
 	    </ion-item>
-    </ion-list>
-    <ion-list>
+	    <ion-item ng-show="noBuyPostings">
+	    	<div class=noPostings >No current buy postings</div>
+	    </ion-item>
 	    <ion-item class = "item-divider">
-	    	Selling
+	    	You're Selling
 	  	</ion-item>
-	  	<ion-item ng-repeat="sellPost in selling" href="#/app/dashboard/singleSell/{{sellPost.objectId}}">
+	  	<ion-item ng-repeat="sellPost in selling" href="#/app/singleSell/{{sellPost.objectId}}">
 	    	{{sellPost.courseCode}}
 	        - {{sellPost.title}}
 	    </ion-item>
+	    <ion-item ng-show="noSellPostings">
+	    	<div class=noPostings >No current sell postings</div>
+	    </ion-item>
     </ion-list>
+    <br>
+    <div class = "button-bar">
+    <a class= "button button-dark icon ion-android-chat" href="#/app/conversations"></a>
+    <a class= "button button-dark ion-plus-round icon-left" href="#/app/newBuyPosting">Buy</a>
+    <a class= "button button-dark ion-plus-round icon-left" href = "#/app/newSellPosting">Sell</a>
+	</div>
   </ion-content>
 </ion-view>
