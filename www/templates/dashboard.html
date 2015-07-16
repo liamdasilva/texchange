@@ -9,7 +9,7 @@
 	        - {{buyPost.title}}
 	    </ion-item>
 	    <ion-item ng-show="noBuyPostings">
-	    	<div class=noPostings >No current buy postings</div>
+	    	<div class=errorMessage >No current buy postings</div>
 	    </ion-item>
 	    <ion-item class = "item-divider">
 	    	You're Selling
@@ -19,7 +19,7 @@
 	        - {{sellPost.title}}
 	    </ion-item>
 	    <ion-item ng-show="noSellPostings">
-	    	<div class=noPostings >No current sell postings</div>
+	    	<div class=errorMessage >No current sell postings</div>
 	    </ion-item>
     </ion-list>
     <br>

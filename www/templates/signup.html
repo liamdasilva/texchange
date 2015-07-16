@@ -6,7 +6,8 @@
     </div>
   </ion-header-bar>
   <ion-content>
-    <form ng-submit="doSignUp()">
+    <div ng-show=signUpError class=errorMessage>{{signUpErrorMessage}}</div>
+    <form>
       <div class="list">
         <label class="item item-input">
           <span class="input-label">First Name</span>
@@ -15,6 +16,10 @@
         <label class="item item-input">
           <span class="input-label">Last Name</span>
           <input type="text" ng-model="signUpData.lastName">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Username</span>
+          <input type="text" ng-model="signUpData.username">
         </label>
         <label class="item item-input">
           <span class="input-label">Email</span>
@@ -26,10 +31,10 @@
         </label>
         <label class="item item-input">
           <span class="input-label">Confirm Password</span>
-          <input type="password" ng-model="loginData.password2">
+          <input type="password" ng-model="signUpData.passwordc">
         </label>
         <label class="item">
-          <button class="button button-block button-dark" type="submit">Log in</button>
+          <button class="button button-block button-dark" ng-disabled="error||incomplete"ng-click = "doSignUp()">Sign Up</button>
         </label>
       </div>
     </form>
