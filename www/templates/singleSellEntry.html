@@ -1,5 +1,40 @@
-<ion-view view-title="Single Sell Entry">
-  <ion-content>
-    <h1>sell entry</h1>
+<ion-view view-title="View Single Sell Entry">
+  <ion-content class = "padding">
+    <div align = "center" ng-show = !posting.visibility>This post is currently visible to only you.</div>
+    <div align = "center" ng-show = posting.visibility>This post is publicly visible.</div>
+    <form>
+      <ion-list ion-list-inset>
+        <label class="item item-input">
+          <span class="input-label">Course Code</span>
+          <input type="text" placeholder = "Course Code" ng-model="posting.courseCode">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Textbook Name</span>
+          <input type="text" placeholder = "Textbook Name" ng-model="posting.tName">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Asking Price</span>
+          <input type="text" placeholder = "Price" ng-model="posting.price">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Edition</span>
+          <input type="text" placeholder = "Edition" ng-model="posting.edition">
+        </label>
+        <label class="item item-input item-select">
+          <span class="input-label">Condition</span>
+          <select ng-model="posting.condition">
+            <option>Excellent</option>
+            <option>Good</option>
+            <option>Average</option>
+            <option>Poor</option>
+          </select>
+        </label>
+        <div class="button-bar">
+        <a class="button button-dark" ng-click="save()">Save</a>
+        <a class="button button-dark" ng-click="post()">Post</a>
+	    </div>
+	    <a class="button button-block button-assertive" ng-click="delete()">Delete</a>
+      </ion-list>
+    </form>
   </ion-content>
 </ion-view>

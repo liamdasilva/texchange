@@ -20,6 +20,68 @@ var getPostings = function(tableName,user){
   return promise;
 }
 
+var getPostingById = function(tableName,id){
+  var query = new Parse.Query(tableName);
+  //set up a promise to return
+  var promise = new Parse.Promise();
+  query.get(id, {
+  success: function(result) {
+      promise.resolve(result.toJSON());
+  },
+  error: function(object, error) {
+    // The object was not retrieved successfully.
+      promise.reject("Error: "+error.message);
+  }
+});
+  return promise;
+}
+
+var updatePostingById = function(tableName,ID,postData){
+  // Create a pointer to an object of class tableName with id ID
+  var Posting = Parse.Object.extend(tableName);
+  var posting = new Posting();
+  posting.id = ID;
+
+  // Set a new value on quantity
+  posting.set("courseCode", postData.courseCode);
+  posting.set("title", postData.tName);
+  posting.set("price", Number(postData.price));
+  posting.set("edition", Number(postData.edition));
+  posting.set("visibility", postData.visibility);//a saved post can only be seen by the user
+  var promise = new Parse.Promise();
+  // Save
+  posting.save(null, {
+    success: function(post) {
+      promise.resolve("Save successful");
+    },
+    error: function(post, error) {
+      // The save failed.
+      promise.reject("Error: " + error.message);
+    }
+  });
+  return promise;
+}
+
+var deletePostingById = function(tableName,ID){
+  // Create a pointer to an object of class tableName with id ID
+  var Posting = Parse.Object.extend(tableName);
+  var posting = new Posting();
+  posting.id = ID;
+  // Set a new value on quantity
+  var promise = new Parse.Promise();
+  // Save
+  posting.destroy({
+    success: function(post) {
+      promise.resolve("Delete successful");
+    },
+    error: function(post, error) {
+      // The save failed.
+      promise.reject("Error: " + error.message);
+    }
+  });
+  return promise;
+}
+
 //signs up a new user and logs them in given a userData object
 //the userData object contains username, email, password, firstName and lastName
 var signUpNewUser = function(userData){
@@ -105,7 +167,11 @@ var savePosting = function(postData, tableName, visible){
       }
     });
   }else{
-    promise.reject("Please leave nothing empty!");
+    if (tableName == "Seller"){
+      promise.reject("All fields are required.");
+    } else{
+      promise.reject("Course Code, Textbook Name and Looking Price are required.");
+    }
   }
   return promise;
 }

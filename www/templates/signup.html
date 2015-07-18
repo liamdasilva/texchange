@@ -34,7 +34,7 @@
           <input type="password" ng-model="signUpData.passwordc">
         </label>
         <label class="item">
-          <button class="button button-block button-dark" ng-disabled="error||incomplete"ng-click = "doSignUp()">Sign Up</button>
+          <button class="button button-block button-dark" ng-disabled="!passMatch||incomplete"ng-click = "doSignUp()">Sign Up</button>
         </label>
       </div>
     </form>
