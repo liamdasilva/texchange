@@ -126,7 +126,6 @@ var savePosting = function(postData, tableName, visible){
       myACL.setPublicReadAccess(true);
       posting.setACL(myACL);
     }
-    
     posting.save(null, {
       success: function(user) {
           promise.resolve("Save successful");
@@ -175,3 +174,245 @@ var savePosting = function(postData, tableName, visible){
   }
   return promise;
 }
+
+var pushToList = function (results){
+	var outputList = [];
+	for (var i = 0; i < results.length; i++)
+	{
+        var object = results[i].toJSON();
+        inputList.push(object);
+        //alert(object.objectId + ' - ' + object.title);
+	return outputList;
+    }
+}
+/* var getConversations = function(user){
+  var query = new Parse.Query("Conversations");
+  query.equalTo("User1",user);
+  var conversations = [];
+  query.find({
+    success: function(results) {
+      //alert("Successfully retrieved " + results.length + " buy posts.");
+      // Do something with the returned Parse.Object values
+      for (var i = 0; i < results.length; i++) {
+        var object = results[i].toJSON();
+        conversations.push(object);
+        //alert(object.objectId + ' - ' + object.title);
+      }
+    },
+    error: function(error) {
+      alert("Error: " + error.code + " " + error.message);
+    }
+  });
+  query.equalTo("User2",user);
+   query.find({
+    success: function(results) {
+      //alert("Successfully retrieved " + results.length + " buy posts.");
+      // Do something with the returned Parse.Object values
+      for (var i = 0; i < results.length; i++) {
+        var object = results[i].toJSON();
+        conversations.push(object);
+        //alert(object.objectId + ' - ' + object.title);
+      }
+    },
+    error: function(error) {
+      alert("Error: " + error.code + " " + error.message);
+    }
+  });
+  var conversations_list = []
+  return conversations;
+}
+ */
+/* var getConversations = function(user){
+//console.log(user);
+  var query = new Parse.Query("Conversations");
+  query.equalTo("User1",user);
+  query.include("User1");
+  var conversations = [];
+  query.find({
+    success: function(results) {
+      //alert("Successfully retrieved " + results.length + " buy posts.");
+      // Do something with the returned Parse.Object values.
+      for (var i = 0; i < results.length; i++) {
+        var convoObject = results[i].toJSON();
+	//	convoObject.get(i).getParseObject("User1").getString("username");
+        conversations.push(convoObject);
+		var username = new Parse.Query ("_User");
+		username.get(convoObject.User1);
+		//console.log(username.get(convoObject.User1).getString("username"));
+        //alert(object.objectId + ' - ' + object.title);
+      }
+    },
+    error: function(error) {
+      alert("Error: " + error.code + " " + error.message);
+    }
+  });
+  query.equalTo("User2",user);
+   query.find({
+    success: function(results) {
+      //alert("Successfully retrieved " + results.length + " buy posts.");
+      // Do something with the returned Parse.Object values
+      for (var i = 0; i < results.length; i++) {
+        var object = results[i].toJSON();
+        conversations.push(object);
+        //alert(object.objectId + ' - ' + object.title);
+      }
+
+    },
+    error: function(error) {
+      alert("Error: " + error.code + " " + error.message);
+    }
+  });
+  var usernameQuery = new Parse.Query("User");
+  console.log(conversations.length);
+  usernameQuery.equalTo("objectId",conversations[0].id);
+  var usernameList = [];
+  usernameQuery.find({
+    success: function(results) {
+      //alert("Successfully retrieved " + results.length + " buy posts.");
+      //Do something with the returned Parse.Object values
+	  //console.log(results.length);
+      for (var i = 0; i < results.length; i++) {
+        var object = results[i].toJSON();
+        usernameList.push(object);
+		    console.log(object.username);
+        //alert(object.objectId + ' - ' + object.title);
+      }
+
+    },
+    error: function(error) {
+      alert("Error: " + error.code + " " + error.message);
+    }
+  });
+  var conversations_list = []
+  return conversations;
+}
+ */
+var getConversations = function(user){
+  console.log("bby please");
+  var query = new Parse.Query("Conversations");
+  var conversations = [];
+  //set up a promise to return
+  var promise = new Parse.Promise();
+  query.find().then(function(results) {
+     
+      for (var i = 0; i < results.length; i++) {
+        var object = results[i].toJSON();
+
+       if ( object.user1.objectId ===user.id ){
+          conversations.push(object.objectId, object.user2.objectId);//.then(
+       }
+       else {
+          conversations.push(object.id,object.user1.objectId);
+       }
+   }
+      promise.resolve(conversations);
+    //  console.log(conversations[0].user1.objectId);
+    },function(error){
+      //fires the error part in the .then() in the code calling this function
+      promise.reject("Error: " + error.message);
+    });
+  return promise;
+}
+
+var getListOfUsernames = function(ListofUsers){
+	var userList = [];
+    for (var i = 0; i < ListofUsers.length; i++) {
+		getUsernamesByID(ListofUsers[i]).then(function(results){
+      userList.push(results);
+    });
+	}
+	return userList;
+}
+
+
+var getUsernamesByID = function(userID){
+  var query = new Parse.Query(Parse.User);
+  var name = "";
+  query.equalTo("objectId", userID);
+  //set up a promise to return
+  var promise = new Parse.Promise();
+  query.get(userID, {
+  success: function(result) {
+      var userObject = result.toJSON();
+      name = userObject.firstName + " " + userObject.lastName;
+      promise.resolve(name);
+  },
+  error: function(object, error) {
+    // The object was not retrieved successfully.
+      promise.reject("Error: "+error.message);
+  }
+});
+  return promise;
+}
+
+
+
+var saveMessageToParse = function(messageText, conversationID, receiverID){
+  if ( messageText.trim() != ""){
+  var currentUserID = Parse.User.current().id;
+  var promise = new Parse.Promise();
+  var Message = Parse.Object.extend("Messages");
+  var message = new Message();
+  message.set("ConversationID", "nncQEfm6JY");
+  message.set("Sender", Parse.User.current());
+  message.set("Message", messageText);
+  var myACL = new Parse.ACL(Parse.User.current());
+  myACL.setWriteAccess(currentUserID, true);
+  myACL.setWriteAccess(receiverID, true);
+  myACL.setPublicReadAccess(true);
+  //console.log(message);
+
+  message.save(null,(function(results) {
+    console.log("why");
+    // The save was successful.
+  }, function(error) {
+    // The save failed.  Error is an instance of Parse.Error.
+  }));
+    return promise;
+  }
+}
+
+var getMessages = function(conversationID){
+  var query = new Parse.Query("Messages");
+  var name = "";
+  query.equalTo("ConversationID", conversationID);
+  //set up a promise to return
+  var promise = new Parse.Promise();
+  var messages = [];
+  query.find().then(function(results) {
+     
+    for (var i = 0; i < results.length; i++) {
+      var object = results[i].toJSON();
+      messages.push(object);
+     // console.log(messages);
+    }
+    promise.resolve(messages);
+    //  console.log(conversations[0].user1.objectId);
+    },function(error){
+      //fires the error part in the .then() in the code calling this function
+      promise.reject("Error: " + error.message);
+    });
+  return promise;
+}
+
+var getUsernameByConversationID = function(conversationID){
+  var query = new Parse.Query("Conversations");
+  var name = "";
+  query.equalTo("objectId", conversationID);
+  //set up a promise to return
+  var promise = new Parse.Promise();
+  query.get(userID, {
+  success: function(result) {
+      var userObject = result.toJSON();
+
+      name = userObject.firstName + " " + userObject.lastName;
+      promise.resolve(name);
+  },
+  error: function(object, error) {
+    // The object was not retrieved successfully.
+      promise.reject("Error: "+error.message);
+  }
+});
+  return promise;
+}
+

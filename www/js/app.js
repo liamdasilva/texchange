@@ -44,10 +44,17 @@ angular.module('app', ['ionic', 'app.controllers'])
     url: "/conversations",
     views: {
       'menuContent': {
-        templateUrl: "templates/conversations.html"
+        templateUrl: "templates/conversations.html",
+		    controller: 'ConversationsCtrl'/*,
+        resolve: { 
+         conversations: function(ConversationsService) {  
+         return ConversationsService.getConversations(Parse.User.current())
+           }
+        }*/
       }
     }
   })
+
   .state('app.dashboard', {
     url: "/dashboard",
     views: {
@@ -58,12 +65,28 @@ angular.module('app', ['ionic', 'app.controllers'])
     }
   })
 
+  .state('app.messaging', {
+    url: "/conversations/:conversationID",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/messaging.html",
+        controller: 'MessagingCtrl'/*,
+         resolve: {
+         conversation: function($stateParams, ConversationsService) {   
+        return ConversationsService.getConversation($stateParams.conversationID)
+      }
+    }*/
+
+      }
+    }
+  })
+
   .state('app.newBuyPosting', {
     url: "/newBuyPosting",
     views: {
       'menuContent': {
-        templateUrl: "templates/newBuyPosting.html",
-        controller: 'NewBuyPostingCtrl'
+        templateUrl: "templates/messaging.html",
+        controller: 'MessagingCtrl'
       }
     }
   })

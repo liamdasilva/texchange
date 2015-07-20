@@ -1,5 +1,14 @@
 <ion-view view-title="Conversations">
-  <ion-content>
-    <h1>Conversations</h1>
+  <ion-content class = "padding">
+    <ion-list>
+	    <ion-item ng-repeat="conversation in conversations" href="#/app/conversations/{{conversationID[0]}}">
+	    	{{conversation}}
+	    </ion-item>
+	    
+	    <ion-item ng-show="noConversations">
+	    	<div class=noPostings >No conversations</div>
+	    </ion-item>
+    </ion-list>
+    <br>
   </ion-content>
 </ion-view>

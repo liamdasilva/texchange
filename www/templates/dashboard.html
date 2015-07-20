@@ -20,13 +20,13 @@
 	  	</ion-item>
 	  	<ion-item ng-repeat="sellPost in selling" href="#/app/singleSell/{{sellPost.objectId}}">
 	    	{{sellPost.courseCode}}
+		
 	        - {{sellPost.title}}
 	    </ion-item>
 	    <ion-item ng-show="noSellPostings">
 	    	<div class=errorMessage >No current sell postings</div>
 	    </ion-item>
     </ion-list>
-    <br>
     <div class = "button-bar">
     <a class= "button button-dark icon ion-android-chat" href="#/app/conversations"></a>
     <a class= "button button-dark ion-plus-round icon-left" href="#/app/newBuyPosting">Buy</a>

@@ -1,14 +1,14 @@
 angular.module('app.controllers', [])
 
 .controller('AppCtrl', ['$scope', '$ionicModal', '$timeout', function($scope, $ionicModal, $timeout) {
-  
+
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
   // listen for the $ionicView.enter event:
   //$scope.$on('$ionicView.enter', function(e) {
   //});
-  
+
   // Form data for the login modal
   $scope.loginData = {};
   $scope.loginData.username="";
@@ -25,7 +25,14 @@ angular.module('app.controllers', [])
   $scope.signUpErrorMessage = "";
   $scope.signUpError = false;
   $scope.passMatch = false;
-  $scope.incomplete = true;  
+  $scope.incomplete = true;
+  $scope.signupData = {};
+  $scope.signupData.username="";
+  $scope.signupData.email="";
+  $scope.signupData.firstName="";
+  $scope.signupData.lastName="";
+  $scope.signupData.password="";
+  $scope.signupData.passwordc="";
 
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -56,7 +63,7 @@ angular.module('app.controllers', [])
     $scope.signupModal.hide();
   };
   // Open the login modal
-  $scope.signup = function() {  
+  $scope.signup = function() {
     $scope.signupModal.show();
   };
 
@@ -96,8 +103,8 @@ angular.module('app.controllers', [])
     $scope.incomplete = false;
     if (!$scope.signUpData.username.length ||
       !$scope.signUpData.lastName.length ||
-      !$scope.signUpData.firstName.length || 
-      !$scope.signUpData.password.length || 
+      !$scope.signUpData.firstName.length ||
+      !$scope.signUpData.password.length ||
       !$scope.signUpData.email.length) {
           $scope.incomplete = true;
     }
@@ -147,6 +154,7 @@ angular.module('app.controllers', [])
   }
 
 }])
+
 .controller('NewBuyPostingCtrl', ['$scope', '$state',function($scope,$state) {
   $scope.posting = {};
   $scope.posting.courseCode = "";
@@ -163,11 +171,54 @@ angular.module('app.controllers', [])
       $scope.posting.edition = "";
       $scope.posting.tName = "";
       $state.go('app.dashboard');
+})}}])
 
-    }, function(error){
-      alert(error);
-    });
+.controller('ConversationsCtrl', ['$scope',function($scope, conversations) {
+    $scope.refresh = function(){
+    $window.location.reload()
   }
+    var user = Parse.User.current();
+	  getConversations(user).then(function(result){
+    $scope.conversationID = result;
+    conversations = result;
+    console.log(conversations);
+		$scope.conversations = getListOfUsernames(result);
+		$scope.noConversations = result.length == 0;
+	}, function(error){
+		alert(error);
+	});
+}])
+
+.controller('MessagingCtrl', ['$scope', '$stateParams','$state','$window',function($scope, $stateParams,$state, $window) {
+      $scope.conversation = $stateParams.conversationID;
+       $scope.History = [];
+    $scope.sendMessage = function(){
+      console.log($scope.Messaging.text + "asdsad");
+      saveMessageToParse($scope.Messaging.text, $scope.conversation, user.id);
+      $scope.Messaging.text = "";
+
+    //  $scope.refresh();
+    }
+
+   // getReceiverID($scope.conversationID);
+    //console.log($scope.conversation);
+    $scope.Messaging = Parse.User.current().id;
+    $scope.Messaging.text = "";
+    var user = Parse.User.current();
+    getMessages($scope.conversation).then(function(result){
+      console.log(result);
+    $scope.History = result;
+      $scope.noHistory = $scope.History.length == 0;
+      }, function(error){
+         alert(error);
+      });
+    $scope.refresh = function(){
+      $window.location.reload();
+    }
+
+}])
+
+.controller('NewBuyPostingCtrl', ['$scope',function($scope) {
 
   $scope.post = function(){
     //save buy posting with visibility as true
@@ -184,7 +235,8 @@ angular.module('app.controllers', [])
       alert(error);
     });
   }
-}])
+  }])
+
 .controller('NewSellPostingCtrl', ['$scope','$state',function($scope,$state) {
   $scope.posting = {};
   $scope.posting.courseCode = "";
@@ -283,3 +335,4 @@ angular.module('app.controllers', [])
     alert(error);
   });
 }]);
+
