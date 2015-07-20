@@ -31,6 +31,12 @@ angular.module('app', ['ionic', 'app.controllers'])
     controller: 'AppCtrl'
   })
 
+  .state('login', {
+      url: "/login",
+      templateUrl: "templates/login.html",
+      controller: 'LoginCtrl'
+    })
+
   .state('app.search', {
     url: "/search",
     views: {
@@ -44,10 +50,22 @@ angular.module('app', ['ionic', 'app.controllers'])
     url: "/conversations",
     views: {
       'menuContent': {
-        templateUrl: "templates/conversations.html"
+        templateUrl: "templates/conversations.html",
+        controller: 'ConversationsCtrl'
       }
     }
   })
+
+  .state('app.message', {
+    url: "/conversations/:objectId",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/messages.html",
+        controller: 'MessageCtrl'
+      }
+    }
+  })
+
   .state('app.dashboard', {
     url: "/dashboard",
     views: {
@@ -98,5 +116,5 @@ angular.module('app', ['ionic', 'app.controllers'])
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/dashboard');
+  $urlRouterProvider.otherwise('/login');
 }]);

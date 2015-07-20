@@ -1,14 +1,31 @@
 angular.module('app.controllers', [])
 
-.controller('AppCtrl', ['$scope', '$ionicModal', '$timeout', function($scope, $ionicModal, $timeout) {
-  
+.controller('AppCtrl', ['$scope', '$ionicModal', '$ionicHistory','$state', function($scope, $ionicModal, $ionicHistory,$state) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
   // listen for the $ionicView.enter event:
   //$scope.$on('$ionicView.enter', function(e) {
   //});
-  
+  $scope.doLogout = function(){
+    console.log("logged out");
+    Parse.User.logOut();
+    alert("You are now logged out");
+    $ionicHistory.nextViewOptions({
+      disableBack: true
+    });
+    $state.go('login');
+  };
+}])
+.controller('LoginCtrl', ['$scope', '$ionicModal', '$ionicHistory', '$state', function($scope, $ionicModal, $ionicHistory,$state) {
+  $scope.$on('$ionicView.enter', function(e) {
+    if(Parse.User.current()){
+      $ionicHistory.nextViewOptions({
+        disableBack: true
+      });
+      $state.go('app.dashboard');
+    }
+  });
   // Form data for the login modal
   $scope.loginData = {};
   $scope.loginData.username="";
@@ -28,28 +45,11 @@ angular.module('app.controllers', [])
   $scope.incomplete = true;  
 
   // Create the login modal that we will use later
-  $ionicModal.fromTemplateUrl('templates/login.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $scope.loginModal = modal;
-  });
-
-  // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/signup.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.signupModal = modal;
   });
-
-  // Triggered in the login modal to close it
-  $scope.closeLogin = function() {
-    $scope.loginModal.hide();
-  };
-
-  // Open the login modal
-  $scope.login = function() {
-    $scope.loginModal.show();
-  };
 
   // Triggered in the login modal to close it
   $scope.closeSignup = function() {
@@ -66,8 +66,11 @@ angular.module('app.controllers', [])
     Parse.User.logIn($scope.loginData.username, $scope.loginData.password,{
       success: function(user){
         $scope.name = user.get("firstName");
-        alert("Hello " + name + ", you are now logged in.");
-        $scope.closeLogin();
+        alert("Hello " + $scope.name + ", you are now logged in.");
+        $ionicHistory.nextViewOptions({
+          disableBack: true
+        });
+        $state.go('app.dashboard');
       },
       error:function(user,error){
         alert(error.message);
@@ -75,11 +78,6 @@ angular.module('app.controllers', [])
     });
   };
 
-  $scope.doLogout = function(){
-    console.log("logged out");
-    Parse.User.logOut();
-    alert("You are now logged out");
-  };
   $scope.$watch('signUpData.username',function() {$scope.test();});
   $scope.$watch('signUpData.email',function() {$scope.test();});
   $scope.$watch('signUpData.firstName', function() {$scope.test();});
@@ -128,16 +126,32 @@ angular.module('app.controllers', [])
 }])
 
 .controller('DashboardCtrl', ['$scope','$window',function($scope,$window) {
-  var user = Parse.User.current();
-  getPostings("Buyer",user).then(function(result){
-    $scope.buying = result;
-    $scope.noBuyPostings = $scope.buying.length == 0;
-  }, function(error){
-    alert(error);
+  $scope.$on('$ionicView.enter', function(e) {
+    var user = Parse.User.current();
+    getPostings("Buyer",user).then(function(result){
+      $scope.buying = result;
+      $scope.noBuyPostings = $scope.buying.length == 0;
+    }, function(error){
+      alert(error);
+    });
+    getPostings("Seller",user).then(function(result){
+      $scope.selling = result;
+      $scope.noSellPostings = $scope.selling.length == 0;
+    }, function(error){
+      alert(error);
+    });
   });
-  getPostings("Seller",user).then(function(result){
-    $scope.selling = result;
-    $scope.noSellPostings = $scope.selling.length == 0;
+  
+  $scope.refresh = function(){
+    $window.location.reload();
+  }
+}])
+
+.controller('ConversationsCtrl', ['$scope','$window',function($scope,$window) {
+  var user = Parse.User.current();
+  getConversations().then(function(result){
+    $scope.conversations = getOtherConversationUser(result);
+    $scope.noConversations = $scope.conversations.length == 0;
   }, function(error){
     alert(error);
   });
@@ -147,6 +161,15 @@ angular.module('app.controllers', [])
   }
 
 }])
+
+.controller('MessageCtrl', ['$scope','$window',function($scope,$window) {
+
+  $scope.refresh = function(){
+    $window.location.reload()
+  }
+
+}])
+
 .controller('NewBuyPostingCtrl', ['$scope', '$state',function($scope,$state) {
   $scope.posting = {};
   $scope.posting.courseCode = "";
@@ -202,11 +225,7 @@ angular.module('app.controllers', [])
       $scope.posting.edition = "";
       $scope.posting.tName = "";
       $scope.posting.condition = "Good";
-      $state.go('app.dashboard', {}, {
-        reload: true,
-        inherit: false,
-        notify: true
-      });
+      $state.go('app.dashboard');
 
     }, function(error){
       alert(error);
