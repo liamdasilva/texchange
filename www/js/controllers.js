@@ -1,20 +1,15 @@
 angular.module('app.controllers', [])
 
-<<<<<<< HEAD
-.controller('AppCtrl', ['$scope', '$ionicModal', '$timeout', function($scope, $ionicModal, $timeout) {
 
-=======
 .controller('AppCtrl', ['$scope', '$ionicModal', '$ionicHistory','$state', function($scope, $ionicModal, $ionicHistory,$state) {
->>>>>>> c5dcfc183dde76c543c0f0c584990acafe578222
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
   // listen for the $ionicView.enter event:
   //$scope.$on('$ionicView.enter', function(e) {
   //});
-<<<<<<< HEAD
 
-=======
+
   $scope.doLogout = function(){
     console.log("logged out");
     Parse.User.logOut();
@@ -34,7 +29,6 @@ angular.module('app.controllers', [])
       $state.go('app.dashboard');
     }
   });
->>>>>>> c5dcfc183dde76c543c0f0c584990acafe578222
   // Form data for the login modal
   $scope.loginData = {};
   $scope.loginData.username="";
@@ -163,32 +157,6 @@ angular.module('app.controllers', [])
   }
 }])
 
-.controller('ConversationsCtrl', ['$scope','$window',function($scope,$window) {
-  var user = Parse.User.current();
-  getConversations().then(function(result){
-    $scope.conversations = getOtherConversationUser(result);
-    $scope.noConversations = $scope.conversations.length == 0;
-  }, function(error){
-    alert(error);
-  });
-
-  $scope.refresh = function(){
-    $window.location.reload()
-  }
-
-}])
-
-<<<<<<< HEAD
-=======
-.controller('MessageCtrl', ['$scope','$window',function($scope,$window) {
-
-  $scope.refresh = function(){
-    $window.location.reload()
-  }
-
-}])
-
->>>>>>> c5dcfc183dde76c543c0f0c584990acafe578222
 .controller('NewBuyPostingCtrl', ['$scope', '$state',function($scope,$state) {
   $scope.posting = {};
   $scope.posting.courseCode = "";
@@ -207,42 +175,103 @@ angular.module('app.controllers', [])
       $state.go('app.dashboard');
 })}}])
 
-.controller('ConversationsCtrl', ['$scope',function($scope, conversations) {
+.factory('conversationsService', [function(conversationsService) {
+  var conversations = [];
+  function set(data) {
+  conversations = data;
+ }
+ function get() {
+  return conversations;
+ }
+ function getConversation(id) {
+      console.log(conversations);
+      var result ;
+      conversations.forEach(function(conversation) {
+     // console.log(id + "1");
+      //console.log(conversation );
+
+        if (conversation.id === id){
+          result=conversation;
+          }
+         })
+  return result;
+}
+ return {
+  set: set,
+  get: get,
+  getConversation: getConversation
+ }
+}])
+
+
+.controller('ConversationsCtrl', ['$scope','conversationsService',function($scope, conversationsService) {
     $scope.refresh = function(){
-    $window.location.reload()
+    $window.location.reload();
   }
+  var user = Parse.User.current();
+  getConversations().then(function(result){
+    $scope.conversations = getOtherConversationUser(result);
+    $scope.conversationID = result;
+   // console.log($scope.conversations);
+    $scope.noConversations = $scope.conversations.length == 0;
+    conversationsService.set($scope.conversations);
+    //console.log(conversationsService.get());
+   // console.log($scope.conversations[0].id);
+   console.log(conversationsService.getConversation($scope.conversations[0].id));
+    }, function(error){
+      alert(error);
+    });
+}])
+
+
+
+
+
+/*
     var user = Parse.User.current();
 	  getConversations(user).then(function(result){
-    $scope.conversationID = result;
-    conversations = result;
-    console.log(conversations);
-		$scope.conversations = getListOfUsernames(result);
-		$scope.noConversations = result.length == 0;
+  
+     $scope.conversationID = result;
+  //    conversations = result;
+		  $scope.conversations = getListOfUsernames(result);
+		  $scope.noConversations = result.length == 0;
+      conversationsService.set(result + $scope.conversations);
+      console.log(conversationsService.get());
+      console.log($scope.conversationID);
+
 	}, function(error){
 		alert(error);
 	});
-}])
+}])*/
 
-.controller('MessagingCtrl', ['$scope', '$stateParams','$state','$window',function($scope, $stateParams,$state, $window) {
+
+
+
+
+.controller('MessagingCtrl', ['$scope', '$stateParams','$state','$window', '$ionicScrollDelegate',function($scope, $stateParams,$state, $window, $ionicScrollDelegate) {
+   
       $scope.conversation = $stateParams.conversationID;
-       $scope.History = [];
-    $scope.sendMessage = function(){
-      console.log($scope.Messaging.text + "asdsad");
-      saveMessageToParse($scope.Messaging.text, $scope.conversation, user.id);
-      $scope.Messaging.text = "";
+      console.log($stateParams);
+      var username = getUsernamesByID($scope.conversation);
+      $scope.History = [];
+      $scope.sendMessage = function(){
 
-    //  $scope.refresh();
+      saveMessageToParse($scope.Message.text, $scope.conversation, user.id);
+      $scope.Message.text = "";
+
     }
-
-   // getReceiverID($scope.conversationID);
-    //console.log($scope.conversation);
     $scope.Messaging = Parse.User.current().id;
-    $scope.Messaging.text = "";
+    $scope.Message = ""
+    $scope.Message.text = "";
     var user = Parse.User.current();
+    console.log($scope.conversation);
     getMessages($scope.conversation).then(function(result){
       console.log(result);
+
     $scope.History = result;
       $scope.noHistory = $scope.History.length == 0;
+
+         
       }, function(error){
          alert(error);
       });

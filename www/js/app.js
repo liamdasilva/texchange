@@ -51,31 +51,17 @@ angular.module('app', ['ionic', 'app.controllers'])
     views: {
       'menuContent': {
         templateUrl: "templates/conversations.html",
-<<<<<<< HEAD
 		    controller: 'ConversationsCtrl'/*,
         resolve: { 
          conversations: function(ConversationsService) {  
          return ConversationsService.getConversations(Parse.User.current())
            }
         }*/
-=======
-        controller: 'ConversationsCtrl'
       }
     }
   })
 
-  .state('app.message', {
-    url: "/conversations/:objectId",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/messages.html",
-        controller: 'MessageCtrl'
->>>>>>> c5dcfc183dde76c543c0f0c584990acafe578222
-      }
-    }
-  })
-
-  .state('app.dashboard', {
+   .state('app.dashboard', {
     url: "/dashboard",
     views: {
       'menuContent': {
@@ -105,8 +91,8 @@ angular.module('app', ['ionic', 'app.controllers'])
     url: "/newBuyPosting",
     views: {
       'menuContent': {
-        templateUrl: "templates/messaging.html",
-        controller: 'MessagingCtrl'
+        templateUrl: "templates/newBuyPosting.html",
+        controller: 'NewBuyPostingCtrl'
       }
     }
   })

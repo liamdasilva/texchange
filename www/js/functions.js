@@ -1,4 +1,4 @@
-var getPostings = function(tableName,user){
+var getPostings = function(tableName, user){
   var query = new Parse.Query(tableName);
   query.equalTo("author",user);
   var postings = [];
@@ -46,10 +46,13 @@ var getOtherConversationUser = function(conversations){
       var convo = {};
       convo.updatedAt = conversation.get("updatedAt");
       if(Parse.User.current().get("username") == conversation.get("user1").get("username")){
-        convo.name = conversation.get("user2").get("firstName");
-
+        convo.name = conversation.get("user2").get("firstName") + " "+ conversation.get("user2").get("lastName");
+        convo.userID = conversation.get("user2").id;
+        convo.id = conversation.id;
       }else{
-        convo.name = conversation.get("user1").get("firstName");
+        convo.name = conversation.get("user1").get("firstName") + " "+ conversation.get("user1").get("lastName");
+        convo.userID = conversation.get("user1").id;
+        convo.id = conversation.id;
       }
       newList.push(convo);
     }
@@ -321,11 +324,10 @@ var pushToList = function (results){
     }
   });
   var conversations_list = []
-  return conversations;
+  return var;
 }
  */
-var getConversations = function(user){
-  console.log("bby please");
+/*var getConversations = function(user){
   var query = new Parse.Query("Conversations");
   var conversations = [];
   //set up a promise to return
@@ -349,7 +351,7 @@ var getConversations = function(user){
       promise.reject("Error: " + error.message);
     });
   return promise;
-}
+}*/
 
 var getListOfUsernames = function(ListofUsers){
 	var userList = [];
@@ -390,7 +392,7 @@ var saveMessageToParse = function(messageText, conversationID, receiverID){
   var promise = new Parse.Promise();
   var Message = Parse.Object.extend("Messages");
   var message = new Message();
-  message.set("ConversationID", "nncQEfm6JY");
+  message.set("ConversationID", conversationID);
   message.set("Sender", Parse.User.current());
   message.set("Message", messageText);
   var myACL = new Parse.ACL(Parse.User.current());
@@ -400,13 +402,14 @@ var saveMessageToParse = function(messageText, conversationID, receiverID){
   //console.log(message);
 
   message.save(null,(function(results) {
-    console.log("why");
     // The save was successful.
   }, function(error) {
     // The save failed.  Error is an instance of Parse.Error.
   }));
-    return promise;
-  }
+
+}
+    return true;
+  
 }
 
 var getMessages = function(conversationID){
@@ -432,24 +435,4 @@ var getMessages = function(conversationID){
   return promise;
 }
 
-var getUsernameByConversationID = function(conversationID){
-  var query = new Parse.Query("Conversations");
-  var name = "";
-  query.equalTo("objectId", conversationID);
-  //set up a promise to return
-  var promise = new Parse.Promise();
-  query.get(userID, {
-  success: function(result) {
-      var userObject = result.toJSON();
-
-      name = userObject.firstName + " " + userObject.lastName;
-      promise.resolve(name);
-  },
-  error: function(object, error) {
-    // The object was not retrieved successfully.
-      promise.reject("Error: "+error.message);
-  }
-});
-  return promise;
-}
 

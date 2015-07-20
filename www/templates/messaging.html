@@ -1,28 +1,13 @@
-<!-- <ion-view view-title="{{conversation}}" meta http-equiv="refresh">
-<ion-content class = "padding">
+
+<ion-view view-title="{{conversation}}" meta http-equiv="refresh">
+<ion-content class = "padding" has-bouncing="true" class="has-header has-footer" >
 	  <ion-refresher
 	    pulling-text="Pull to refresh..."
 	    on-refresh="refresh()">
 	  </ion-refresher>
-		<div class="list card">
-  		<ion-item ng-repeat="message in History | orderBy: 'createdAt':false" >
-			<div ng-if="message.Sender.objectId == Messaging ">  <a class="assertive">
-     			{{message.Message +" "+ message.createdAt }}
-       	</a>	</div>
-       		<div ng-if="message.Sender.objectId != Messaging "> 
-     			{{message.Message +" "+ message.createdAt }}
-       		</div>
 
-   	    </ion-item>
-	   
-	    <ion-item ng-show="noMessages">
-	    	<div class=noPostings >No Messages</div>
-	    </ion-item>
-		</div>
-		  </ion-content>	 -->
 
-		  <ion-content has-bouncing="true" class="has-header has-footer" >   
-              <div ng-repeat="message in History" class="message-wrapper">
+              <div ng-repeat="message in History" class="message-wrapper" >
                   <div ng-if="message.Sender.objectId == Messaging">
                     <div class="chat-bubble left">
                           <div class="message" ng-bind-html="message.Message">
@@ -38,23 +23,16 @@
                   <div class="cf"></div>      
               </div>
           </ion-content>
-<!-- <div class="bar bar-footer ">
-    <label class="item item-input">
-      <span class="input-label"></span>
-      <input type="text"  ng-model="Messaging.text" placeholder="Message">
 
-    </label>
-    <a class="button button-icon icon ion-paper-airplane" ng-click="sendMessage()"></a>
-  </div>
-</ion-view>
- -->
-        <form name="sendMessageForm" ng-submit="sendMessage(sendMessageForm)" novalidate>
+ <form name="sendMessageForm" ng-submit="sendMessage(sendMessageForm)" novalidate>
               <ion-footer-bar class="bar-stable item-input-inset message-footer" keyboard-attach>
                   <label class="item-input-wrapper">
-                      <textarea ng-model="Messaging.text" value="" placeholder="Send a message..." required minlength="1" maxlength="1500" ></textarea>
+                      <textarea ng-model="Message.text" value="" placeholder="Send a message" required minlength="1" maxlength="1500" ></textarea>
                   </label>
                   <div class="footer-btn-wrap">
-                    <button class="button button-icon icon ion-android-send footer-btn" type="submit" ng-click="sendMessage()"></button>
+                    <button class="button button-icon icon ion-android-send footer-btn" type="submit"
+                        ng-disabled="!Message.text || Message.text === ''" ng-click="sendMessage()">
+                    </button>
                   </div>
               </ion-footer-bar>
           </form>

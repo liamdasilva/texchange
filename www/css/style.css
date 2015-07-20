@@ -1,3 +1,6 @@
+.errorMessage{
+	color:#D46A6A;
+}
 
 /* allows the bar-footer to be elastic /*
 /* optionally set a max-height */
@@ -82,20 +85,19 @@ at the bottom as the textarea resizes */
   background-color: #158ffe;
   color: #fff;
   float: right;
-  margin-right: 55px;
+  margin-right: 15px;
 }
 
 .chat-bubble.right:before {
   background-color: #158ffe;
-  right: 10px;
+  right: 15px;
   -webkit-transform: rotate(118deg) skew(-5deg);
 }
 
 input, textarea, .item-input, .item-input-wrapper {
-	  width: 100% !important;
-
-  background-color: #f4f4f4 !important;
-    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	width: 100% !important;
+  background-color: #f8f8f8 !important;
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
 	box-sizing: border-box;         /* Opera/IE 8+ */
 
