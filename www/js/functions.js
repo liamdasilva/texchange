@@ -20,6 +20,43 @@ var getPostings = function(tableName,user){
   return promise;
 }
 
+//this returns a Parse object containing user1 and user2
+var getConversations = function(){
+  var query = new Parse.Query("Conversations");
+  query.include("user1");
+  query.include("user2");
+  var postings = [];
+  //set up a promise to return
+  var promise = new Parse.Promise();
+  query.find().then(function(results) {
+      promise.resolve(results);
+    },function(error){
+      //fires the error part in the .then() in the code calling this function
+      promise.reject("Error: " + error.message);
+    });
+  return promise;
+}
+
+var getOtherConversationUser = function(conversations){
+  var newList = [];
+  var user, user1;
+    if(Parse.User.current()){
+    for (var i = 0; i < conversations.length; i++) {
+      conversation = conversations[i];
+      var convo = {};
+      convo.updatedAt = conversation.get("updatedAt");
+      if(Parse.User.current().get("username") == conversation.get("user1").get("username")){
+        convo.name = conversation.get("user2").get("firstName");
+
+      }else{
+        convo.name = conversation.get("user1").get("firstName");
+      }
+      newList.push(convo);
+    }
+  }
+  return newList;
+}
+
 var getPostingById = function(tableName,id){
   var query = new Parse.Query(tableName);
   //set up a promise to return

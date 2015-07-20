@@ -31,6 +31,12 @@ angular.module('app', ['ionic', 'app.controllers'])
     controller: 'AppCtrl'
   })
 
+  .state('login', {
+      url: "/login",
+      templateUrl: "templates/login.html",
+      controller: 'LoginCtrl'
+    })
+
   .state('app.search', {
     url: "/search",
     views: {
@@ -45,12 +51,26 @@ angular.module('app', ['ionic', 'app.controllers'])
     views: {
       'menuContent': {
         templateUrl: "templates/conversations.html",
+<<<<<<< HEAD
 		    controller: 'ConversationsCtrl'/*,
         resolve: { 
          conversations: function(ConversationsService) {  
          return ConversationsService.getConversations(Parse.User.current())
            }
         }*/
+=======
+        controller: 'ConversationsCtrl'
+      }
+    }
+  })
+
+  .state('app.message', {
+    url: "/conversations/:objectId",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/messages.html",
+        controller: 'MessageCtrl'
+>>>>>>> c5dcfc183dde76c543c0f0c584990acafe578222
       }
     }
   })
@@ -121,5 +141,5 @@ angular.module('app', ['ionic', 'app.controllers'])
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/dashboard');
+  $urlRouterProvider.otherwise('/login');
 }]);
