@@ -50,9 +50,7 @@ angular.module('app.services', [])
   };
 })
 
-<<<<<<< HEAD
-.service('')
-=======
+
 .service('conversationsService', [function(conversationsService) {
   var conversations = [];
   function set(data) {
@@ -80,4 +78,3 @@ angular.module('app.services', [])
   getConversation: getConversation
  }
 }])
->>>>>>> adc53af0e5dca29d5cbbe1170f7187a4ef2a4f76

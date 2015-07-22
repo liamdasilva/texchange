@@ -144,9 +144,7 @@ angular.module('app.controllers', [])
   }
   $scope.setMode = function(table,index){
     dashboardEntries.setIndex(index);
-<<<<<<< HEAD
     dashboardEntries.setTableName(table);
-=======
   }
 }])
 
@@ -224,7 +222,6 @@ angular.module('app.controllers', [])
     }, function(error){
       alert(error);
     });
->>>>>>> adc53af0e5dca29d5cbbe1170f7187a4ef2a4f76
   }
 }])
 
