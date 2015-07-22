@@ -144,37 +144,90 @@ angular.module('app.controllers', [])
   }
   $scope.setMode = function(table,index){
     dashboardEntries.setIndex(index);
+<<<<<<< HEAD
     dashboardEntries.setTableName(table);
+=======
   }
 }])
 
-.factory('conversationsService', [function(conversationsService) {
-  var conversations = [];
-  function set(data) {
-  conversations = data;
- }
- function get() {
-  return conversations;
- }
- function getConversation(id) {
-      console.log(conversations);
-      var result ;
-      conversations.forEach(function(conversation) {
-     // console.log(id + "1");
-      //console.log(conversation );
+.controller('SearchCtrl', ['$scope','$window',function($scope,$window) {
+   // var user = Parse.User.current();
+    $scope.search = {};
+   // console.log($scope.search.option);
+    //console.log($scope.search.text);
+    $scope.getSearchResults = function(){
+      console.log($scope.search.text);
+      console.log($scope.search.option);
+      if ($scope.search.option == "Buying"){
+        getAllPostsByTitle($scope.search.text, "Buyer").then(function(result){
+          console.log(result[0]);
+            $scope.results  = result;
 
-        if (conversation.id === id){
-          result=conversation;
-          }
-         })
-  return result;
-}
- return {
-  set: set,
-  get: get,
-  getConversation: getConversation
- }
+            $scope.noResults = $scope.results.length == 0;
+                        $scope.$apply();
+
+        }, function (error){
+          alert (error);
+        });
+      }
+       else if ($scope.search.option == "Selling"){
+        getAllPostsByTitle($scope.search.text, "Seller").then(function(result){
+            $scope.results  = result;
+            console.log($scope.results.length);
+            $scope.noResults = $scope.results.length == 0;
+                        $scope.$apply();
+
+            console.log($scope.results);
+        }, function (error){
+          alert (error);
+        });
+      }
+    }
+
+  $scope.refresh = function(){
+    $window.location.reload();
+  }
 }])
+
+
+.controller('NewBuyPostingCtrl', ['$scope', '$state','dashboardEntries',function($scope,$state,dashboardEntries) {
+  $scope.posting = {};
+  $scope.posting.courseCode = "";
+  $scope.posting.price = "";
+  $scope.posting.edition = "";
+  $scope.posting.tName = "";
+  $scope.save = function(){
+    savePosting($scope.posting,"Buyer", false).then(function(result,object){
+      alert("Save successful");
+      dashboardEntries.getEntries().buying.push(object.toJSON());
+      //reset values in textboxes
+      $scope.posting.courseCode = "";
+      $scope.posting.price = "";
+      $scope.posting.edition = "";
+      $scope.posting.tName = "";
+      $state.go('app.dashboard');
+    },function(error){
+      alert(error);
+    })
+  }
+  $scope.post = function(){
+    //save buy posting with visibility as true
+    savePosting($scope.posting,"Buyer", true).then(function(result,object){
+      alert("Post successful");
+      dashboardEntries.getEntries().buying.push(object.toJSON());
+      //reset values in textboxes
+      $scope.posting.courseCode = "";
+      $scope.posting.price = "";
+      $scope.posting.edition = "";
+      $scope.posting.tName = "";
+      $state.go('app.dashboard');
+    }, function(error){
+      alert(error);
+    });
+>>>>>>> adc53af0e5dca29d5cbbe1170f7187a4ef2a4f76
+  }
+}])
+
 
 
 .controller('ConversationsCtrl', ['$scope','conversationsService',function($scope, conversationsService) {

@@ -41,7 +41,9 @@ angular.module('app', ['ionic', 'app.controllers','app.services'])
     url: "/search",
     views: {
       'menuContent': {
-        templateUrl: "templates/search.html"
+        templateUrl: "templates/search.html",
+        controller: 'SearchCtrl'
+
       }
     }
   })

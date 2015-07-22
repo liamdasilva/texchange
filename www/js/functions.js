@@ -305,4 +305,28 @@ var getMessages = function(conversationID){
   return promise;
 }
 
+var getAllPostsByTitle = function(title, tableName){
+  var query = new Parse.Query(tableName);
+  query.matches("title", "("+title+")", "i");   
+  var promise = new Parse.Promise();
+  var postings = [];
+  query.find().then(function(results) {
+     
+    for (var i = 0; i < results.length; i++) {
+      var object = results[i].toJSON();
+      postings.push(object);
+     // console.log(messages);
+    }
+    promise.resolve(postings);
+    //  console.log(conversations[0].user1.objectId);
+    },function(error){
+      //fires the error part in the .then() in the code calling this function
+      promise.reject("Error: " + error.message);
+    });
+  return promise;
+}
+
+
+
+
 

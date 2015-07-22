@@ -1,5 +1,5 @@
-
 <ion-view view-title="{{conversation}}" meta http-equiv="refresh">
+<<<<<<< HEAD
 <ion-content class = "padding" has-bouncing="true" class="has-header has-footer" >
 <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()">
 </ion-refresher>
@@ -34,3 +34,37 @@
 </ion-footer-bar>
 </form>
 </ion-view>
+=======
+  <ion-content class = "padding" has-bouncing="true" class="has-header has-footer" >
+	  <ion-refresher 
+      pulling-text="Pull to refresh..."
+	    on-refresh="refresh()">
+	  </ion-refresher>
+    <div ng-repeat="message in History" class="message-wrapper" >
+      <div ng-if="message.Sender.objectId != Messaging">
+        <div class="chat-bubble left">
+          <div class="message" ng-bind-html="message.Message">
+          </div>      
+        </div>
+      </div>
+      <div ng-if="message.Sender.objectId == Messaging">
+        <div class="chat-bubble right">
+          <div class="message" ng-bind-html="message.Message">
+          </div>      
+        </div>
+      </div>
+      <div class="cf"></div>      
+    </div>
+  </ion-content>
+  <form name="sendMessageForm" ng-submit="sendMessage()" novalidate>
+    <ion-footer-bar class="bar-stable item-input-inset message-footer" keyboard-attach>
+      <label class="item-input-wrapper">
+        <textarea ng-model="Message.text" value="" placeholder="Send a message" required minlength="1" maxlength="1500" ></textarea>
+          </label>
+            <div class="footer-btn-wrap">
+              <button class="button button-icon icon ion-android-send footer-btn" type="submit" ng-disabled="!Message.text || Message.text === ''" ng-click="sendMessage()">
+              </button>
+            </div>
+          </ion-footer-bar>
+        </form>
+>>>>>>> adc53af0e5dca29d5cbbe1170f7187a4ef2a4f76

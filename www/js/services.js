@@ -50,4 +50,34 @@ angular.module('app.services', [])
   };
 })
 
+<<<<<<< HEAD
 .service('')
+=======
+.service('conversationsService', [function(conversationsService) {
+  var conversations = [];
+  function set(data) {
+  conversations = data;
+ }
+ function get() {
+  return conversations;
+ }
+ function getConversation(id) {
+      console.log(conversations);
+      var result ;
+      conversations.forEach(function(conversation) {
+     // console.log(id + "1");
+      //console.log(conversation );
+
+        if (conversation.id === id){
+          result=conversation;
+          }
+         })
+  return result;
+}
+ return {
+  set: set,
+  get: get,
+  getConversation: getConversation
+ }
+}])
+>>>>>>> adc53af0e5dca29d5cbbe1170f7187a4ef2a4f76
