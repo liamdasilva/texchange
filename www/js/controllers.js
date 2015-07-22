@@ -157,6 +157,46 @@ angular.module('app.controllers', [])
   }
 }])
 
+.controller('SearchCtrl', ['$scope','$window',function($scope,$window) {
+   // var user = Parse.User.current();
+    $scope.search = {};
+   // console.log($scope.search.option);
+    //console.log($scope.search.text);
+    $scope.getSearchResults = function(){
+      console.log($scope.search.text);
+      console.log($scope.search.option);
+      if ($scope.search.option == "Buying"){
+        getAllPostsByTitle($scope.search.text, "Buyer").then(function(result){
+          console.log(result[0]);
+            $scope.results  = result;
+
+            $scope.noResults = $scope.results.length == 0;
+                        $scope.$apply();
+
+        }, function (error){
+          alert (error);
+        });
+      }
+       else if ($scope.search.option == "Selling"){
+        getAllPostsByTitle($scope.search.text, "Seller").then(function(result){
+            $scope.results  = result;
+            console.log($scope.results.length);
+            $scope.noResults = $scope.results.length == 0;
+                        $scope.$apply();
+
+            console.log($scope.results);
+        }, function (error){
+          alert (error);
+        });
+      }
+    }
+
+  $scope.refresh = function(){
+    $window.location.reload();
+  }
+}])
+
+
 .controller('NewBuyPostingCtrl', ['$scope', '$state',function($scope,$state) {
   $scope.posting = {};
   $scope.posting.courseCode = "";
@@ -175,33 +215,6 @@ angular.module('app.controllers', [])
       $state.go('app.dashboard');
 })}}])
 
-.factory('conversationsService', [function(conversationsService) {
-  var conversations = [];
-  function set(data) {
-  conversations = data;
- }
- function get() {
-  return conversations;
- }
- function getConversation(id) {
-      console.log(conversations);
-      var result ;
-      conversations.forEach(function(conversation) {
-     // console.log(id + "1");
-      //console.log(conversation );
-
-        if (conversation.id === id){
-          result=conversation;
-          }
-         })
-  return result;
-}
- return {
-  set: set,
-  get: get,
-  getConversation: getConversation
- }
-}])
 
 
 .controller('ConversationsCtrl', ['$scope','conversationsService',function($scope, conversationsService) {
@@ -222,31 +235,6 @@ angular.module('app.controllers', [])
       alert(error);
     });
 }])
-
-
-
-
-
-/*
-    var user = Parse.User.current();
-	  getConversations(user).then(function(result){
-  
-     $scope.conversationID = result;
-  //    conversations = result;
-		  $scope.conversations = getListOfUsernames(result);
-		  $scope.noConversations = result.length == 0;
-      conversationsService.set(result + $scope.conversations);
-      console.log(conversationsService.get());
-      console.log($scope.conversationID);
-
-	}, function(error){
-		alert(error);
-	});
-}])*/
-
-
-
-
 
 .controller('MessagingCtrl', ['$scope', '$stateParams','$state','$window', '$ionicScrollDelegate',function($scope, $stateParams,$state, $window, $ionicScrollDelegate) {
    
