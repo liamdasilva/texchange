@@ -135,45 +135,68 @@ angular.module('app.controllers', [])
   };
 }])
 
-.controller('DashboardCtrl', ['$scope','$window',function($scope,$window) {
-  $scope.$on('$ionicView.enter', function(e) {
-    var user = Parse.User.current();
-    getPostings("Buyer",user).then(function(result){
-      $scope.buying = result;
-      $scope.noBuyPostings = $scope.buying.length == 0;
-    }, function(error){
-      alert(error);
-    });
-    getPostings("Seller",user).then(function(result){
-      $scope.selling = result;
-      $scope.noSellPostings = $scope.selling.length == 0;
-    }, function(error){
-      alert(error);
-    });
-  });
+.controller('DashboardCtrl', ['$scope','$window','dashboardEntries',function($scope,$window,dashboardEntries) {
+  // var user = Parse.User.current();
+  // getPostings("Buyer",user).then(function(result){
+  //   $scope.buying = result;
+  //   $scope.noBuyPostings = $scope.buying.length == 0;
+  //    $scope.$apply();
+  // }, function(error){
+  //   alert(error);
+  // });
+  // getPostings("Seller",user).then(function(result){
+  //   $scope.selling = result;
+  //   $scope.noSellPostings = $scope.selling.length == 0;
+  // }, function(error){
+  //   alert(error);
+  // });
+  $scope.entries = dashboardEntries.getEntries();
   
   $scope.refresh = function(){
-    $window.location.reload();
+    $scope.entries = dashboardEntries.getEntries();
+    $scope.$apply();
+  }
+  $scope.setIndex = function(index){
+    dashboardEntries.setIndex(index);
   }
 }])
 
-.controller('NewBuyPostingCtrl', ['$scope', '$state',function($scope,$state) {
+.controller('NewBuyPostingCtrl', ['$scope', '$state','dashboardEntries',function($scope,$state,dashboardEntries) {
   $scope.posting = {};
   $scope.posting.courseCode = "";
   $scope.posting.price = "";
   $scope.posting.edition = "";
   $scope.posting.tName = "";
-
   $scope.save = function(){
-    savePosting($scope.posting,"Buyer", false).then(
-      function(result){
+    savePosting($scope.posting,"Buyer", false).then(function(result,object){
       alert("Save successful");
+      dashboardEntries.getEntries().buying.push(object.toJSON());
+      //reset values in textboxes
       $scope.posting.courseCode = "";
       $scope.posting.price = "";
       $scope.posting.edition = "";
       $scope.posting.tName = "";
       $state.go('app.dashboard');
-})}}])
+    },function(error){
+      alert(error);
+    })
+  }
+  $scope.post = function(){
+    //save buy posting with visibility as true
+    savePosting($scope.posting,"Buyer", true).then(function(result,object){
+      alert("Post successful");
+      dashboardEntries.getEntries().buying.push(object.toJSON());
+      //reset values in textboxes
+      $scope.posting.courseCode = "";
+      $scope.posting.price = "";
+      $scope.posting.edition = "";
+      $scope.posting.tName = "";
+      $state.go('app.dashboard');
+    }, function(error){
+      alert(error);
+    });
+  }
+}])
 
 .factory('conversationsService', [function(conversationsService) {
   var conversations = [];
@@ -205,7 +228,7 @@ angular.module('app.controllers', [])
 
 
 .controller('ConversationsCtrl', ['$scope','conversationsService',function($scope, conversationsService) {
-    $scope.refresh = function(){
+  $scope.refresh = function(){
     $window.location.reload();
   }
   var user = Parse.User.current();
@@ -217,6 +240,7 @@ angular.module('app.controllers', [])
     conversationsService.set($scope.conversations);
     //console.log(conversationsService.get());
    // console.log($scope.conversations[0].id);
+   $scope.$apply();
    console.log(conversationsService.getConversation($scope.conversations[0].id));
     }, function(error){
       alert(error);
@@ -250,57 +274,36 @@ angular.module('app.controllers', [])
 
 .controller('MessagingCtrl', ['$scope', '$stateParams','$state','$window', '$ionicScrollDelegate',function($scope, $stateParams,$state, $window, $ionicScrollDelegate) {
    
-      $scope.conversation = $stateParams.conversationID;
-      console.log($stateParams);
-      var username = getUsernamesByID($scope.conversation);
-      $scope.History = [];
-      $scope.sendMessage = function(){
-
-      saveMessageToParse($scope.Message.text, $scope.conversation, user.id);
-      $scope.Message.text = "";
-
-    }
-    $scope.Messaging = Parse.User.current().id;
-    $scope.Message = ""
+  $scope.conversation = $stateParams.conversationID;
+  console.log($stateParams);
+  var username = getUsernamesByID($scope.conversation);
+  $scope.History = [];
+  $scope.sendMessage = function(){
+    saveMessageToParse($scope.Message.text, $scope.conversation, user.id);
     $scope.Message.text = "";
-    var user = Parse.User.current();
-    console.log($scope.conversation);
-    getMessages($scope.conversation).then(function(result){
-      console.log(result);
+  }
+  $scope.Messaging = Parse.User.current().id;
+  $scope.Message = "";
+  $scope.Message.text = "";
+  var user = Parse.User.current();
+  console.log($scope.conversation);
+  getMessages($scope.conversation).then(function(result){
+    console.log(result);
 
-    $scope.History = result;
-      $scope.noHistory = $scope.History.length == 0;
+  $scope.History = result;
+    $scope.noHistory = $scope.History.length == 0;
 
-         
-      }, function(error){
-         alert(error);
-      });
-    $scope.refresh = function(){
-      $window.location.reload();
-    }
+       
+    }, function(error){
+       alert(error);
+    });
+  $scope.refresh = function(){
+    $window.location.reload();
+  }
 
 }])
 
-.controller('NewBuyPostingCtrl', ['$scope',function($scope) {
-
-  $scope.post = function(){
-    //save buy posting with visibility as true
-    savePosting($scope.posting,"Buyer", true).then(
-      function(result){
-      alert("Post successful");
-      $scope.posting.courseCode = "";
-      $scope.posting.price = "";
-      $scope.posting.edition = "";
-      $scope.posting.tName = "";
-      $state.go('app.dashboard');
-
-    }, function(error){
-      alert(error);
-    });
-  }
-  }])
-
-.controller('NewSellPostingCtrl', ['$scope','$state',function($scope,$state) {
+.controller('NewSellPostingCtrl', ['$scope','$state','dashboardEntries',function($scope,$state,dashboardEntries) {
   $scope.posting = {};
   $scope.posting.courseCode = "";
   $scope.posting.price = "";
@@ -309,9 +312,11 @@ angular.module('app.controllers', [])
   $scope.posting.condition = "Good";
 
   $scope.save = function(){
-    savePosting($scope.posting,"Seller", false).then(
-      function(result){
+    savePosting($scope.posting,"Seller", false).then(function(result,object){
       alert("Save successful");
+      //update the dashboard list of sell posts
+      dashboardEntries.getEntries().selling.push(object.toJSON());
+      //reset the form before leaving
       $scope.posting.courseCode = "";
       $scope.posting.price = "";
       $scope.posting.edition = "";
@@ -326,9 +331,11 @@ angular.module('app.controllers', [])
 
   $scope.post = function(){
     //save buy posting with visibility as true
-    savePosting($scope.posting,"Seller", true).then(
-      function(result){
+    savePosting($scope.posting,"Seller", true).then(function(result,object){
       alert("Post successful");
+      //update the dashboard list of sell posts
+      dashboardEntries.getEntries().selling.push(object.toJSON());
+      //reset the form before leaving
       $scope.posting.courseCode = "";
       $scope.posting.price = "";
       $scope.posting.edition = "";
@@ -339,17 +346,22 @@ angular.module('app.controllers', [])
     });
   }
 }])
-.controller('SingleBuyEntryCtrl', ['$scope', '$stateParams','$state',function($scope, $stateParams,$state) {
+.controller('SingleBuyEntryCtrl', ['$scope', '$stateParams','$state','dashboardEntries',function($scope, $stateParams,$state,dashboardEntries) {
   $scope.save = function(){
-    updatePostingById("Buyer",$stateParams.objectId,$scope.posting).then(function(result){
+    updatePostingById("Buyer",$stateParams.objectId,$scope.posting).then(function(result,object){
         alert(result);
+        var i = dashboardEntries.getIndex();
+        dashboardEntries.getEntries().buying[i] = object.toJSON();
+        
     },function(error){
       alert(error);
     });
   }
   $scope.delete = function(){
-    deletePostingById("Buyer",$stateParams.objectId).then(function(result){
+    deletePostingById("Buyer",$stateParams.objectId).then(function(result,post){
         alert(result);
+        var i = dashboardEntries.getIndex();
+        dashboardEntries.getEntries().buying.splice(i,1);
         $state.go('app.dashboard');
     },function(error){
       alert(error);
@@ -366,10 +378,11 @@ angular.module('app.controllers', [])
     alert(error);
   });
 }])
-.controller('SingleSellEntryCtrl', ['$scope', '$stateParams','$state',function($scope, $stateParams,$state) {
+.controller('SingleSellEntryCtrl', ['$scope', '$stateParams','$state','dashboardEntries',function($scope, $stateParams,$state,dashboardEntries) {
   $scope.save = function(){
     updatePostingById("Seller",$stateParams.objectId,$scope.posting).then(function(result){
         alert(result);
+
     },function(error){
       alert(error);
     });
