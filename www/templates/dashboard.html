@@ -8,22 +8,22 @@
     	<ion-item class = "item-divider">
       		You're Buying
   	  	</ion-item>
-	    <ion-item ng-repeat="buyPost in buying" href="#/app/singleBuy/{{buyPost.objectId}}">
+	    <ion-item ng-repeat="buyPost in entries.buying" ng-click="setIndex($index)" href="#/app/singleBuy/{{buyPost.objectId}}">
 	    	{{buyPost.courseCode}}
 	        - {{buyPost.title}}
 	    </ion-item>
-	    <ion-item ng-show="noBuyPostings">
+	    <ion-item ng-show="entries.noBuyPostings">
 	    	<div class=errorMessage >No current buy postings</div>
 	    </ion-item>
 	    <ion-item class = "item-divider">
 	    	You're Selling
 	  	</ion-item>
-	  	<ion-item ng-repeat="sellPost in selling" href="#/app/singleSell/{{sellPost.objectId}}">
+	  	<ion-item ng-repeat="sellPost in entries.selling" href="#/app/singleSell/{{sellPost.objectId}}">
 	    	{{sellPost.courseCode}}
 		
 	        - {{sellPost.title}}
 	    </ion-item>
-	    <ion-item ng-show="noSellPostings">
+	    <ion-item ng-show="entries.noSellPostings">
 	    	<div class=errorMessage >No current sell postings</div>
 	    </ion-item>
     </ion-list>
