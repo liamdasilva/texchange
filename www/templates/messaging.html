@@ -8,13 +8,13 @@
 
 
               <div ng-repeat="message in History" class="message-wrapper" >
-                  <div ng-if="message.Sender.objectId == Messaging">
+                  <div ng-if="message.Sender.objectId != Messaging">
                     <div class="chat-bubble left">
                           <div class="message" ng-bind-html="message.Message">
                           </div>      
                       </div>
                   </div>
-                  <div ng-if="message.Sender.objectId != Messaging">
+                  <div ng-if="message.Sender.objectId == Messaging">
                        <div class="chat-bubble right">
                           <div class="message" ng-bind-html="message.Message">
                           </div>      
