@@ -1,4 +1,4 @@
-<ion-view view-title="New Sell Posting">
+<ion-view view-title="New Posting">
   <ion-content class = "padding">
     <form>
       <ion-list ion-list-inset>
@@ -8,13 +8,14 @@
         </label>
         <label class="item item-input">
           <span class="input-label">Textbook Name</span>
-          <input type="text" ng-model="posting.tName">
+          <input type="text" ng-model="posting.title">
         </label>
         <label class="item item-input">
-          <span class="input-label">Price</span>
+          <span ng-if ="mode == 'Seller'"class="input-label">Asking Price</span>
+          <span ng-if ="mode == 'Buyer'"class="input-label">Looking Price</span>
           <input type="text" ng-model="posting.price">
         </label>
-        <label class="item item-input item-select">
+        <label ng-if ="mode == 'Seller'" class="item item-input item-select">
           <span class="input-label">Condition</span>
           <select ng-model="posting.condition">
             <option>Excellent</option>

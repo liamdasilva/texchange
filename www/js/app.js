@@ -88,45 +88,26 @@ angular.module('app', ['ionic', 'app.controllers','app.services'])
     }
   })
 
-  .state('app.newBuyPosting', {
-    url: "/newBuyPosting",
+  .state('app.newPosting', {
+    url: "/newPosting",
     views: {
       'menuContent': {
-        templateUrl: "templates/newBuyPosting.html",
-        controller: 'NewBuyPostingCtrl'
+        templateUrl: "templates/newPosting.html",
+        controller: 'NewPostingCtrl'
       }
     }
   })
 
-  .state('app.newSellPosting', {
-    url: "/newSellPosting",
+  .state('app.singleEntry', {
+    url: "/single/:objectId",
     views: {
       'menuContent': {
-        templateUrl: "templates/newSellPosting.html",
-        controller: 'NewSellPostingCtrl'
+        templateUrl: "templates/singleEntry.html",
+        controller: 'SingleEntryCtrl'
       }
     }
   })
 
-  .state('app.singleBuyEntry', {
-    url: "/singleBuy/:objectId",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/singleBuyEntry.html",
-        controller: 'SingleBuyEntryCtrl'
-      }
-    }
-  })
-
-  .state('app.singleSellEntry', {
-    url: "/singleSell/:objectId",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/singleSellEntry.html",
-        controller: 'SingleSellEntryCtrl'
-      }
-    }
-  });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
 }]);

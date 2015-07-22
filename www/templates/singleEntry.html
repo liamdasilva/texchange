@@ -1,4 +1,4 @@
-<ion-view view-title="View Single Sell Entry">
+<ion-view view-title="View Single Entry">
   <ion-content class = "padding">
     <div align = "center" ng-show = !posting.visibility>This post is currently visible to only you.</div>
     <div align = "center" ng-show = posting.visibility>This post is publicly visible.</div>
@@ -10,17 +10,18 @@
         </label>
         <label class="item item-input">
           <span class="input-label">Textbook Name</span>
-          <input type="text" placeholder = "Textbook Name" ng-model="posting.tName">
+          <input type="text" placeholder = "Textbook Name" ng-model="posting.title">
         </label>
         <label class="item item-input">
-          <span class="input-label">Asking Price</span>
+          <span ng-if ="mode == 'Buyer'"class="input-label">Looking Price</span>
+          <span ng-if ="mode == 'Seller'"class="input-label">Asking Price</span>
           <input type="text" placeholder = "Price" ng-model="posting.price">
         </label>
         <label class="item item-input">
           <span class="input-label">Edition</span>
           <input type="text" placeholder = "Edition" ng-model="posting.edition">
         </label>
-        <label class="item item-input item-select">
+        <label ng-if ="mode == 'Seller'" class="item item-input item-select">
           <span class="input-label">Condition</span>
           <select ng-model="posting.condition">
             <option>Excellent</option>
@@ -30,8 +31,9 @@
           </select>
         </label>
         <div class="button-bar">
-        <a class="button button-dark" ng-click="save()">Save</a>
-        <a class="button button-dark" ng-click="post()">Post</a>
+        <a class="button button-dark" ng-disabled = changeMade ng-click="save()">Save</a>
+        <a class="button button-dark" ng-show = !posting.visibility ng-click="togglePublish()">Publish</a>
+        <a class="button button-dark" ng-show = posting.visibility ng-click="togglePublish()">Unpublish</a>
 	    </div>
 	    <a class="button button-block button-assertive" ng-click="delete()">Delete</a>
       </ion-list>

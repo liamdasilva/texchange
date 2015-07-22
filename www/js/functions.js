@@ -84,7 +84,7 @@ var updatePostingById = function(tableName,ID,postData){
 
   // Set a new value on quantity
   posting.set("courseCode", postData.courseCode);
-  posting.set("title", postData.tName);
+  posting.set("title", postData.title);
   posting.set("price", Number(postData.price));
   posting.set("edition", Number(postData.edition));
   posting.set("visibility", postData.visibility);//a saved post can only be seen by the user
@@ -147,7 +147,7 @@ var signUpNewUser = function(userData){
 var savePosting = function(postData, tableName, visible){
   //set up a promise to return
   var promise = new Parse.Promise();
-  if (tableName == "Buyer" && postData.courseCode != "" && postData.tName != "" && postData.price != ""){
+  if (tableName == "Buyer" && postData.courseCode != "" && postData.title != "" && postData.price != ""){
     var Posting = Parse.Object.extend(tableName);
     var posting = new Posting();
 
@@ -156,7 +156,7 @@ var savePosting = function(postData, tableName, visible){
     }
     posting.set("author",Parse.User.current());
     posting.set("courseCode", postData.courseCode);
-    posting.set("title", postData.tName);
+    posting.set("title", postData.title);
     posting.set("price", Number(postData.price));
     posting.set("visibility", visible);//a saved post can only be seen by the user
     if(!visible){
@@ -175,7 +175,7 @@ var savePosting = function(postData, tableName, visible){
           promise.reject("Error: " + error.message);
       }
     });
-  } else if (tableName == "Seller" && postData.courseCode != "" && postData.tName != "" && postData.price != "" && postData.condition != "" && postData.edition != ""){
+  } else if (tableName == "Seller" && postData.courseCode != "" && postData.title != "" && postData.price != "" && postData.condition != "" && postData.edition != ""){
     var Posting = Parse.Object.extend(tableName);
     var posting = new Posting();
 
@@ -184,7 +184,7 @@ var savePosting = function(postData, tableName, visible){
     }
     posting.set("author",Parse.User.current());
     posting.set("courseCode", postData.courseCode);
-    posting.set("title", postData.tName);
+    posting.set("title", postData.title);
     posting.set("price", Number(postData.price));
     posting.set("condition", postData.condition);
     posting.set("visibility", visible);//a saved post can only be seen by the user
@@ -198,7 +198,7 @@ var savePosting = function(postData, tableName, visible){
     
     posting.save(null, {
       success: function(user) {
-          promise.resolve("Save successful");
+          promise.resolve("Save successful",user);
       },
       error: function(user, error) {
         // Show the error message somewhere and let the user try again.

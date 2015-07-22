@@ -9,17 +9,18 @@ angular.module('app.services', [])
     noSellPostings: true
   };
   var index = 0;
+  var tableName = "";
   getPostings("Buyer",user).then(function(result){
     entries.buying = result;
     entries.noBuyPostings = result.length == 0;
   }, function(error){
-    console.log("dashboardEntries service error: "+error);
+    console.log("dashboardEntries service error: " + error);
   });
   getPostings("Seller",user).then(function(result){
     entries.selling = result;
     entries.noSellPostings = result.length == 0;
   }, function(error){
-    console.log("dashboardEntries service error: "+error);
+    console.log("dashboardEntries service error: " + error);
   });
 
   return {
@@ -39,6 +40,14 @@ angular.module('app.services', [])
       },
       setIndex: function(value){
         index = value;
+      },
+      getTableName: function(){
+        return tableName;
+      },
+      setTableName: function(value){
+        tableName = value;
       }
   };
 })
+
+.service('')
