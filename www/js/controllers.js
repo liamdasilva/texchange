@@ -161,7 +161,6 @@ angular.module('app.controllers', [])
   }
 }])
 
-<<<<<<< HEAD
 .controller('SearchCtrl', ['$scope','$window',function($scope,$window) {
    // var user = Parse.User.current();
     $scope.search = {};
@@ -202,10 +201,7 @@ angular.module('app.controllers', [])
 }])
 
 
-.controller('NewBuyPostingCtrl', ['$scope', '$state',function($scope,$state) {
-=======
 .controller('NewBuyPostingCtrl', ['$scope', '$state','dashboardEntries',function($scope,$state,dashboardEntries) {
->>>>>>> 75670188cab94cb35baa2c61a09941f92ecbc812
   $scope.posting = {};
   $scope.posting.courseCode = "";
   $scope.posting.price = "";
