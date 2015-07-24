@@ -29,8 +29,8 @@ var getConversations = function(){
   //set up a promise to return
   var promise = new Parse.Promise();
   query.find().then(function(results) {
-      promise.resolve(results);
-    },function(error){
+    promise.resolve(results);
+  },function(error){
       //fires the error part in the .then() in the code calling this function
       promise.reject("Error: " + error.message);
     });
@@ -40,7 +40,7 @@ var getConversations = function(){
 var getOtherConversationUser = function(conversations){
   var newList = [];
   var user, user1;
-    if(Parse.User.current()){
+  if(Parse.User.current()){
     for (var i = 0; i < conversations.length; i++) {
       conversation = conversations[i];
       var convo = {};
@@ -65,12 +65,12 @@ var getPostingById = function(tableName,id){
   //set up a promise to return
   var promise = new Parse.Promise();
   query.get(id, {
-  success: function(result) {
+    success: function(result) {
       promise.resolve(result.toJSON());
-  },
-  error: function(object, error) {
+    },
+    error: function(object, error) {
     // The object was not retrieved successfully.
-      promise.reject("Error: "+error.message);
+    promise.reject("Error: "+error.message);
   }
 });
   return promise;
@@ -134,11 +134,11 @@ var signUpNewUser = function(userData){
   var promise = new Parse.Promise();
   user.signUp(null, {
     success: function(user) {
-        promise.resolve("Sign Up successful");
+      promise.resolve("Sign Up successful");
     },
     error: function(user, error) {
       // Show the error message somewhere and let the user try again.
-        promise.reject("Error: " + error.message);
+      promise.reject("Error: " + error.message);
     }
   });
   return promise;
@@ -168,11 +168,11 @@ var savePosting = function(postData, tableName, visible){
     }
     posting.save(null, {
       success: function(user) {
-          promise.resolve("Save successful",user);
+        promise.resolve("Save successful",user);
       },
       error: function(user, error) {
         // Show the error message somewhere and let the user try again.
-          promise.reject("Error: " + error.message);
+        promise.reject("Error: " + error.message);
       }
     });
   } else if (tableName == "Seller" && postData.courseCode != "" && postData.title != "" && postData.price != "" && postData.condition != "" && postData.edition != ""){
@@ -198,11 +198,11 @@ var savePosting = function(postData, tableName, visible){
     
     posting.save(null, {
       success: function(user) {
-          promise.resolve("Save successful",user);
+        promise.resolve("Save successful",user);
       },
       error: function(user, error) {
         // Show the error message somewhere and let the user try again.
-          promise.reject("Error: " + error.message);
+        promise.reject("Error: " + error.message);
       }
     });
   }else{
@@ -219,50 +219,50 @@ var pushToList = function (results){
 	var outputList = [];
 	for (var i = 0; i < results.length; i++)
 	{
-        var object = results[i].toJSON();
-        inputList.push(object);
+    var object = results[i].toJSON();
+    inputList.push(object);
         //alert(object.objectId + ' - ' + object.title);
-	return outputList;
+        return outputList;
+      }
     }
-}
 
-var getListOfUsernames = function(ListofUsers){
-	var userList = [];
-    for (var i = 0; i < ListofUsers.length; i++) {
-		getUsernamesByID(ListofUsers[i]).then(function(results){
-      userList.push(results);
-    });
-	}
-	return userList;
-}
+    var getListOfUsernames = function(ListofUsers){
+     var userList = [];
+     for (var i = 0; i < ListofUsers.length; i++) {
+      getUsernamesByID(ListofUsers[i]).then(function(results){
+        userList.push(results);
+      });
+    }
+    return userList;
+  }
 
 
-var getUsernamesByID = function(userID){
-  var query = new Parse.Query(Parse.User);
-  var name = "";
-  query.equalTo("objectId", userID);
+  var getUsernamesByID = function(userID){
+    var query = new Parse.Query(Parse.User);
+    var name = "";
+    query.equalTo("objectId", userID);
   //set up a promise to return
   var promise = new Parse.Promise();
   query.get(userID, {
-  success: function(result) {
+    success: function(result) {
       var userObject = result.toJSON();
       name = userObject.firstName + " " + userObject.lastName;
       promise.resolve(name);
-  },
-  error: function(object, error) {
+    },
+    error: function(object, error) {
     // The object was not retrieved successfully.
-      promise.reject("Error: "+error.message);
+    promise.reject("Error: "+error.message);
   }
 });
   return promise;
 }
 
 var saveMessageToParse = function(messageText, conversationID, receiverID){
-  if ( messageText.trim() != ""){
   var currentUserID = Parse.User.current().id;
   var promise = new Parse.Promise();
   var Message = Parse.Object.extend("Messages");
   var message = new Message();
+
   message.set("ConversationID", conversationID);
   message.set("Sender", Parse.User.current());
   message.set("Message", messageText);
@@ -272,13 +272,19 @@ var saveMessageToParse = function(messageText, conversationID, receiverID){
   myACL.setPublicReadAccess(true);
   //console.log(message);
 
-  message.save(null,(function(results) {
-    // The save was successful.
-  }, function(error) {
-    // The save failed.  Error is an instance of Parse.Error.
-  }));
-}
-    return true;
+  message.save(null,{
+    success: (function(results) {
+      promise.resolve(results.toJSON());
+      //console.log(results);
+      console.log(results.toJSON());
+    }),
+    error: (function(error) {
+      alert(error);
+    // error is a Parse.Error with an error code and message.
+  })
+  })
+  //console.log(message.toJSON());
+  return promise;
   
 }
 
@@ -286,19 +292,20 @@ var getMessages = function(conversationID){
   var query = new Parse.Query("Messages");
   var name = "";
   query.equalTo("ConversationID", conversationID);
+  query.ascending("createdAt");
   //set up a promise to return
   var promise = new Parse.Promise();
   var messages = [];
   query.find().then(function(results) {
-     
+
     for (var i = 0; i < results.length; i++) {
       var object = results[i].toJSON();
       messages.push(object);
      // console.log(messages);
-    }
-    promise.resolve(messages);
+   }
+   promise.resolve(messages);
     //  console.log(conversations[0].user1.objectId);
-    },function(error){
+  },function(error){
       //fires the error part in the .then() in the code calling this function
       promise.reject("Error: " + error.message);
     });
@@ -311,15 +318,15 @@ var getAllPostsByTitle = function(title, tableName){
   var promise = new Parse.Promise();
   var postings = [];
   query.find().then(function(results) {
-     
+
     for (var i = 0; i < results.length; i++) {
       var object = results[i].toJSON();
       postings.push(object);
      // console.log(messages);
-    }
-    promise.resolve(postings);
+   }
+   promise.resolve(postings);
     //  console.log(conversations[0].user1.objectId);
-    },function(error){
+  },function(error){
       //fires the error part in the .then() in the code calling this function
       promise.reject("Error: " + error.message);
     });
@@ -328,5 +335,30 @@ var getAllPostsByTitle = function(title, tableName){
 
 
 
+var updateMessages = function(conversationID, lastUpdated, otherUserID){
+  console.log(lastUpdated);
+  var query = new Parse.Query("Messages");
+  query.equalTo("ConversationID", conversationID);
+  query.notEqualTo("Sender", Parse.User.current());
+  //console.log(Parse.User.current());
+  query.ascending("createdAt");
+  //set up a promise to return
+  var promise = new Parse.Promise();
+  var updatedHistory =[];
+  query.greaterThan("createdAt",lastUpdated)
+  query.find().then(function(results) {
 
-
+    for (var i = 0; i < results.length; i++) {
+      var object = results[i].toJSON();
+      updatedHistory.push(object);
+     
+     // console.log(messages);
+   }
+   promise.resolve(updatedHistory);
+    //  console.log(conversations[0].user1.objectId);
+  },function(error){
+      //fires the error part in the .then() in the code calling this function
+      promise.reject("Error: " + error.message);
+    });
+  return promise;
+}

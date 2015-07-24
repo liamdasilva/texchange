@@ -1,9 +1,9 @@
-<ion-view view-title="{{conversation}}" meta http-equiv="refresh">
-<ion-content class = "padding" has-bouncing="true" class="has-header has-footer" >
-<ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()">
+<ion-view view-title="{{conversations.name}}" >
+<ion-content class = "padding" has-bouncing="true" class="has-header has-footer" delegate-handle="mainScroll">
+<ion-refresher pulling-text="Pull to update" on-refresh="update()">
 </ion-refresher>
 
-<div ng-repeat="message in History" class="message-wrapper" >
+<div ng-repeat="message in History" class="message-wrapper"  title="{{message.createdAt}}">
   <div ng-if="message.Sender.objectId != Messaging">
     <div class="chat-bubble left">
       <div class="message" ng-bind-html="message.Message">
@@ -20,7 +20,7 @@
 </div>
 </ion-content>
 
-<form name="sendMessageForm" ng-submit="sendMessage(sendMessageForm)" novalidate>
+<form name="sendMessageForm" ng-submit="sendMessage()" novalidate>
   <ion-footer-bar class="bar-stable item-input-inset message-footer" keyboard-attach>
   <label class="item-input-wrapper">
     <textarea ng-model="Message.text" value="" placeholder="Send a message" required minlength="1" maxlength="1500" ></textarea>

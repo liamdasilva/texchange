@@ -1,5 +1,25 @@
 angular.module('app.services', [])
 
+.service('conversationsService', function () {
+  var user = Parse.User.current();
+  var conversationsHistory = [];
+  return {
+    getConversations: function () {
+      return conversationsHistory;
+    },
+    setConversations: function (conversations) {
+      conversationsHistory = conversations;
+    },
+    getConversation: function(ID) {
+      result = null;
+      conversationsHistory.forEach(function(conversation) {
+        if (conversation.id === ID) result = conversation;
+      })
+      return result
+    }
+  };
+})
+
 .service('dashboardEntries', function () {
   var user = Parse.User.current();
   var entries = {
@@ -24,57 +44,29 @@ angular.module('app.services', [])
   });
 
   return {
-      getEntries: function () {
-          return entries;
-      },
-      setBuying: function(value) {
-          entries.buying = value;
-          entries.noBuyPostings = value.length ==0;
-      },
-      setSelling: function(value) {
-          entries.selling = value;
-          entries.noSellPostings = value.length == 0;
-      },
-      getIndex: function(){
-        return index;
-      },
-      setIndex: function(value){
-        index = value;
-      },
-      getTableName: function(){
-        return tableName;
-      },
-      setTableName: function(value){
-        tableName = value;
-      }
+    getEntries: function () {
+      return entries;
+    },
+    setBuying: function(value) {
+      entries.buying = value;
+      entries.noBuyPostings = value.length ==0;
+    },
+    setSelling: function(value) {
+      entries.selling = value;
+      entries.noSellPostings = value.length == 0;
+    },
+    getIndex: function(){
+      return index;
+    },
+    setIndex: function(value){
+      index = value;
+    },
+    getTableName: function(){
+      return tableName;
+    },
+    setTableName: function(value){
+      tableName = value;
+    }
   };
 })
 
-
-.service('conversationsService', [function(conversationsService) {
-  var conversations = [];
-  function set(data) {
-  conversations = data;
- }
- function get() {
-  return conversations;
- }
- function getConversation(id) {
-      console.log(conversations);
-      var result ;
-      conversations.forEach(function(conversation) {
-     // console.log(id + "1");
-      //console.log(conversation );
-
-        if (conversation.id === id){
-          result=conversation;
-          }
-         })
-  return result;
-}
- return {
-  set: set,
-  get: get,
-  getConversation: getConversation
- }
-}])
