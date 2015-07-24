@@ -532,18 +532,6 @@ $scope.$on("$destroy", function (event) {
     }
   }
 }])
-<<<<<<< HEAD
-
-.controller('ViewPostingsCtrl', ['$scope', '$stateParams','$state','viewPosting',function($scope, $stateParams,$state,viewPosting) {
-  
-  $scope.objectId = $stateParams.objectId;
-  $scope.posting = viewPosting.getPosting();
-  $scope.mode = viewPosting.getTableName();
-  
-}]);
-
-=======
->>>>>>> 53c8601b65d9b09768dbb4e9cba96b7afe2492c0
 
 .controller('ViewPostingsCtrl', ['$scope', '$stateParams','$state','viewPosting',function($scope, $stateParams,$state,viewPosting) {
   
