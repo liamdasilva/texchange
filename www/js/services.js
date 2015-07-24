@@ -1,5 +1,26 @@
 angular.module('app.services', [])
 
+.service('conversationsService', function () {
+  var user = Parse.User.current();
+  var conversationsHistory = [];
+  return {
+    getConversations: function () {
+      return conversationsHistory;
+    },
+    setConversations: function (conversations) {
+      conversationsHistory = conversations;
+    },
+    getConversation: function(ID) {
+      result = null;
+      conversationsHistory.forEach(function(conversation) {
+        if (conversation.id === ID) result = conversation;
+      })
+      return result
+    }
+  };
+})
+
+
 .service('dashboardEntries', function () {
   //initialize index at -1 for error checking in single entry controller
   var index = -1;
@@ -52,6 +73,7 @@ angular.module('app.services', [])
   };
 })
 
+<<<<<<< HEAD
 .service('conversationsService', [function(conversationsService) {
   var conversations = [];
   function set(data) {
@@ -80,6 +102,8 @@ angular.module('app.services', [])
  }
 }])
 
+=======
+>>>>>>> 53c8601b65d9b09768dbb4e9cba96b7afe2492c0
 .service('viewPosting', function () {
   //initialize index at -1 for error checking in single entry controller
   var tableName = "";
@@ -98,4 +122,8 @@ angular.module('app.services', [])
         tableName = value;
       }
   };
+<<<<<<< HEAD
 })
+=======
+})
+>>>>>>> 53c8601b65d9b09768dbb4e9cba96b7afe2492c0

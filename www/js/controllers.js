@@ -1,7 +1,6 @@
-angular.module('app.controllers', [])
+  angular.module('app.controllers', [])
 
-
-.controller('AppCtrl', ['$scope', '$ionicHistory','dashboardEntries','$state', function($scope, $ionicHistory,dashboardEntries,$state) {
+  .controller('AppCtrl', ['$scope', '$ionicHistory','dashboardEntries','$state', function($scope, $ionicHistory,dashboardEntries,$state) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -20,7 +19,8 @@ angular.module('app.controllers', [])
     $state.go('login');
   };
 }])
-.controller('LoginCtrl', ['$scope', '$ionicModal','dashboardEntries', '$ionicHistory', '$state', function($scope, $ionicModal,dashboardEntries, $ionicHistory,$state) {
+  
+ .controller('LoginCtrl', ['$scope', '$ionicModal','dashboardEntries', '$ionicHistory', '$state', function($scope, $ionicModal,dashboardEntries, $ionicHistory,$state) {
   $scope.$on('$ionicView.enter', function(e) {
     if(Parse.User.current()){
       $ionicHistory.nextViewOptions({
@@ -148,46 +148,47 @@ angular.module('app.controllers', [])
   };
 }])
 
-.controller('DashboardCtrl', ['$scope','$location','$ionicLoading','dashboardEntries',function($scope,$location,$ionicLoading,dashboardEntries) {
-  $ionicLoading.show({
-    content: 'Loading',
-    animation: 'fade-in',
-    showBackdrop: true,
-    maxWidth: 200,
-    showDelay: 0
-  });
-  $scope.entries = {};
-  var user = Parse.User.current();
-  getPostings("Buyer",user).then(function(result){
-    $scope.entries.buying = result;
-    dashboardEntries.setBuying($scope.entries.buying);
-  }, function(error){
-    console.log(error);
-  });
-  getPostings("Seller",user).then(function(result){
-    $scope.entries.selling = result;
-    dashboardEntries.setSelling($scope.entries.selling);
-    $ionicLoading.hide();
-  }, function(error){
-    console.log(error);
-  });
-  
-  $scope.refresh = function(){
-    $scope.entries = {};
-    $scope.entries.buying = dashboardEntries.getBuying();
-    $scope.entries.selling = dashboardEntries.getSelling();
-    $scope.$broadcast("scroll.refreshComplete");
-  }
-  $scope.setMode = function(table,index){
-    dashboardEntries.setIndex(index);
-    dashboardEntries.setTableName(table);
-  }
-}])
 
-.controller('SearchCtrl', ['$scope','$window',function($scope,$window) {
+  .controller('DashboardCtrl', ['$scope','$location','$ionicLoading','dashboardEntries',function($scope,$location,$ionicLoading,dashboardEntries) {
+    $ionicLoading.show({
+      content: 'Loading',
+      animation: 'fade-in',
+      showBackdrop: true,
+      maxWidth: 200,
+      showDelay: 0
+    });
+    $scope.entries = {};
+    var user = Parse.User.current();
+    getPostings("Buyer",user).then(function(result){
+      $scope.entries.buying = result;
+      dashboardEntries.setBuying($scope.entries.buying);
+    }, function(error){
+      console.log(error);
+    });
+    getPostings("Seller",user).then(function(result){
+      $scope.entries.selling = result;
+      dashboardEntries.setSelling($scope.entries.selling);
+      $ionicLoading.hide();
+    }, function(error){
+      console.log(error);
+    });
+
+    $scope.refresh = function(){
+      $scope.entries = {};
+      $scope.entries.buying = dashboardEntries.getBuying();
+      $scope.entries.selling = dashboardEntries.getSelling();
+      $scope.$broadcast("scroll.refreshComplete");
+    }
+    $scope.setMode = function(table,index){
+      dashboardEntries.setIndex(index);
+      dashboardEntries.setTableName(table);
+    }
+  }])
+
+  .controller('SearchCtrl', ['$scope','$window',function($scope,$window) {
    // var user = Parse.User.current();
-    $scope.search = {};
-    $scope.search.option = "Buying";
+   $scope.search = {};
+   $scope.search.option = "Buying";
    // console.log($scope.search.option);
     //console.log($scope.search.text);
     $scope.getSearchResults = function(){
@@ -196,81 +197,185 @@ angular.module('app.controllers', [])
       if ($scope.search.option == "Buying"){
         getAllPostsByTitle($scope.search.text, "Buyer").then(function(result){
           console.log(result[0]);
-            $scope.results  = result;
+          $scope.results  = result;
 
-            $scope.noResults = $scope.results.length == 0;
-            $scope.$apply();
+          $scope.noResults = $scope.results.length == 0;
+          $scope.$apply();
 
         }, function (error){
           alert (error);
         });
       }
-       else if ($scope.search.option == "Selling"){
+      else if ($scope.search.option == "Selling"){
         getAllPostsByTitle($scope.search.text, "Seller").then(function(result){
-            $scope.results  = result;
-            console.log($scope.results.length);
-            $scope.noResults = $scope.results.length == 0;
-            $scope.$apply();
+          $scope.results  = result;
+          console.log($scope.results.length);
+          $scope.noResults = $scope.results.length == 0;
+          $scope.$apply();
 
-            console.log($scope.results);
+          console.log($scope.results);
         }, function (error){
           alert (error);
         });
       }
     }
 
-  $scope.refresh = function(){
+    $scope.refresh = function(){
+      $window.location.reload();
+    }
+  }])
+
+
+  .controller('NewBuyPostingCtrl', ['$scope', '$state','dashboardEntries',function($scope,$state,dashboardEntries) {
+    $scope.posting = {};
+    $scope.posting.courseCode = "";
+    $scope.posting.price = "";
+    $scope.posting.edition = "";
+    $scope.posting.tName = "";
+    $scope.save = function(){
+      savePosting($scope.posting,"Buyer", false).then(function(result,object){
+        alert("Save successful");
+        dashboardEntries.getEntries().buying.push(object.toJSON());
+        //reset values in textboxes
+        $scope.posting.courseCode = "";
+        $scope.posting.price = "";
+        $scope.posting.edition = "";
+        $scope.posting.tName = "";
+        $state.go('app.dashboard');
+      },function(error){
+        alert(error);
+      })
+    }
+    $scope.post = function(){
+      //save buy posting with visibility as true
+      savePosting($scope.posting,"Buyer", true).then(function(result,object){
+        alert("Post successful");
+        dashboardEntries.getEntries().buying.push(object.toJSON());
+        //reset values in textboxes
+        $scope.posting.courseCode = "";
+        $scope.posting.price = "";
+        $scope.posting.edition = "";
+        $scope.posting.tName = "";
+        $state.go('app.dashboard');
+      }, function(error){
+        alert(error);
+      });
+    }
+  }])
+
+
+  .controller('ConversationsCtrl', ['$scope','conversationsService',function($scope, conversationsService) {
+   $scope.conversations = {};
+   getConversations().then(function(result){
+     $scope.conversations = getOtherConversationUser(result);
+     conversationsService.setConversations($scope.conversations);
+     noConversations = $scope.conversations.length == 0;
+     $scope.$apply();
+   }, function(error){
+    alert(error);
+  });
+   $scope.refresh = function(){
     $window.location.reload();
   }
 }])
 
-.controller('ConversationsCtrl', ['$scope','conversationsService',function($scope, conversationsService) {
-  $scope.refresh = function(){
-    $window.location.reload();
-  }
-  var user = Parse.User.current();
-  getConversations().then(function(result){
-    $scope.conversations = getOtherConversationUser(result);
-    $scope.conversationID = result;
-   // console.log($scope.conversations);
-    $scope.noConversations = $scope.conversations.length == 0;
-    conversationsService.set($scope.conversations);
-    //console.log(conversationsService.get());
-   // console.log($scope.conversations[0].id);
-   $scope.$apply();
-   console.log(conversationsService.getConversation($scope.conversations[0].id));
-    }, function(error){
-      alert(error);
-    });
-}])
+  .controller('MessagingCtrl', ['$scope', '$stateParams','$state','$window', '$ionicScrollDelegate','$timeout','conversationsService','$interval',function($scope, $stateParams,$state, $window, $ionicScrollDelegate,$timeout, conversationsService,$interval) {
+    lastUpdated = new Date();
+   // console.log(lastUpdated); 
+   $scope.conversations = conversationsService.getConversation();
+   $scope.conversationID = $stateParams.conversationID;
 
-.controller('MessagingCtrl', ['$scope', '$stateParams','$state','$window', '$ionicScrollDelegate',function($scope, $stateParams,$state, $window, $ionicScrollDelegate) {
-  $scope.conversation = $stateParams.conversationID;
-  console.log($stateParams);
-  var username = getUsernamesByID($scope.conversation);
+   if (conversationsService.getConversations().length == 0){
+    getConversations().then(function(result){
+     $scope.conversations = getOtherConversationUser(result);
+     conversationsService.setConversations($scope.conversations);
+     $scope.conversations = conversationsService.getConversation($scope.conversationID);
+     console.log($scope.conversations);
+     $scope.$apply();
+
+   }, function(error){
+    alert(error);
+  });
+  }else{
+    $scope.conversations = conversationsService.getConversation($scope.conversationID);
+  }
+
   $scope.History = [];
   $scope.sendMessage = function(){
-    saveMessageToParse($scope.Message.text, $scope.conversation, user.id);
+    if ($scope.Message.text.trim() != ""){
+      saveMessageToParse($scope.Message.text, $scope.conversationID, $scope.conversations.userID).then(function(result){
+        lastUpdated = new Date();
+        $scope.History.push(result);
+        $scope.$apply();
+        $scope.scrollToBottom();
+
+      }, function(error){
+        alert(error);
+      });
+    }
     $scope.Message.text = "";
   }
   $scope.Messaging = Parse.User.current().id;
   $scope.Message = "";
   $scope.Message.text = "";
   var user = Parse.User.current();
-  console.log($scope.conversation);
-  getMessages($scope.conversation).then(function(result){
-    console.log(result);
-
-  $scope.History = result;
+  getMessages($scope.conversationID).then(function(result){
+    $scope.History = result;
     $scope.noHistory = $scope.History.length == 0;
+    $scope.scrollToBottom();
+    lastUpdated = new Date();
+    $scope.update();
 
-       
-    }, function(error){
-       alert(error);
-    });
-  $scope.refresh = function(){
-    $window.location.reload();
-  }
+  }, function(error){
+   alert(error);
+ });
+  var stop;
+  $scope.update = function() {
+          // Don't start updating if we are already updating
+          if ( angular.isDefined(stop) ) return;
+          stop = $interval(function() {
+           updateMessages($scope.conversationID, lastUpdated, $scope.conversations.userID).then(function(result){
+            lastUpdated = new Date();
+            $scope.History =  $scope.History.concat(result); 
+            $scope.$apply();
+            $scope.scrollToBottom();
+          });       
+         }, 5000);
+        };
+
+        $scope.stopUpdate = function() {
+          if (angular.isDefined(stop)) {
+            $interval.cancel(stop);
+            stop = undefined;
+          }
+        };
+
+        $scope.$on('$destroy', function() {
+          // Make sure that the interval is destroyed too
+          $scope.stopUpdate();
+        });
+
+        $scope.scrollToBottom = function() {
+          $timeout(function() {
+            $ionicScrollDelegate.$getByHandle('mainScroll').scrollBottom();
+          }, 0);
+        };
+
+   /* var stop = $interval(function() {
+     updateMessages($scope.conversationID, lastUpdated, $scope.conversation.userID).then(function(result){
+      lastUpdated = new Date();
+      $scope.History =  $scope.History.concat(result); 
+      $scope.$apply();
+      $scope.scrollToBottom();
+     });            
+   },10000);
+
+$scope.$on("$destroy", function (event) {
+    if ( stop ) {
+        $interval.cancel( stop );
+      }*/
+      /*});*/
+
 
 }])
 
@@ -427,6 +532,7 @@ angular.module('app.controllers', [])
     }
   }
 }])
+<<<<<<< HEAD
 
 .controller('ViewPostingsCtrl', ['$scope', '$stateParams','$state','viewPosting',function($scope, $stateParams,$state,viewPosting) {
   
@@ -436,4 +542,13 @@ angular.module('app.controllers', [])
   
 }]);
 
+=======
+>>>>>>> 53c8601b65d9b09768dbb4e9cba96b7afe2492c0
 
+.controller('ViewPostingsCtrl', ['$scope', '$stateParams','$state','viewPosting',function($scope, $stateParams,$state,viewPosting) {
+  
+  $scope.objectId = $stateParams.objectId;
+  $scope.posting = viewPosting.getPosting();
+  $scope.mode = viewPosting.getTableName();
+  
+}]);

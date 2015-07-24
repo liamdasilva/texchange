@@ -9,10 +9,10 @@ angular.module('app', ['ionic', 'app.controllers','app.services'])
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
-    if (window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-    }
-    if (window.StatusBar) {
+  if (window.cordova && window.cordova.plugins.Keyboard) {
+    cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+  }
+  if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
@@ -21,47 +21,48 @@ angular.module('app', ['ionic', 'app.controllers','app.services'])
 
 .config(['$stateProvider','$urlRouterProvider',
   function($stateProvider, $urlRouterProvider) {
-  $stateProvider
+    $stateProvider
 
-  .state('app', {
-    url: "/app",
-    abstract: true,
-    templateUrl: "templates/menu.html",
-    controller: 'AppCtrl'
-  })
+    .state('app', {
+      url: "/app",
+      abstract: true,
+      templateUrl: "templates/menu.html",
+      controller: 'AppCtrl'
+    })
 
-  .state('login', {
+    .state('login', {
       url: "/login",
       templateUrl: "templates/login.html",
       controller: 'LoginCtrl'
   })
 
-  .state('app.search', {
-    url: "/search",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/search.html",
-        controller: 'SearchCtrl'
+    .state('app.search', {
+      url: "/search",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/search.html",
+          controller: 'SearchCtrl'
 
+        }
       }
-    }
-  })
+    })
 
-  .state('app.conversations', {
-    url: "/conversations",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/conversations.html",
+    .state('app.conversations', {
+      url: "/conversations",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/conversations.html",
 		    controller: 'ConversationsCtrl'/*,
         resolve: { 
          conversations: function(ConversationsService) {  
          return ConversationsService.getConversations(Parse.User.current())
            }
-        }*/
-      }
-    }
-  })
+         }*/
+       }
+     }
+   })
 
+  
    .state('app.dashboard', {
     url: "/dashboard",
     views: {
@@ -69,14 +70,17 @@ angular.module('app', ['ionic', 'app.controllers','app.services'])
         templateUrl: "templates/dashboard.html",
         controller: 'DashboardCtrl'
       }
-    }
-  })
+    }})
 
-  .state('app.messaging', {
-    url: "/conversations/:conversationID",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/messaging.html",
+    .state('app.messaging', {
+      cache: false,
+      url: "/conversations/:conversationID",
+        // this param is not part of url
+        // it could be passed with $state.go or ui-sref 
+      
+      views: {
+        'menuContent': {
+          templateUrl: "templates/messaging.html",
         controller: 'MessagingCtrl'/*,
          resolve: {
          conversation: function($stateParams, ConversationsService) {   
@@ -84,30 +88,30 @@ angular.module('app', ['ionic', 'app.controllers','app.services'])
       }
     }*/
 
-      }
-    }
-  })
+  }
+}
+})
 
-  .state('app.newPosting', {
-    url: "/newPosting",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/newPosting.html",
-        controller: 'NewPostingCtrl'
-      }
+.state('app.newPosting', {
+  url: "/newPosting",
+  views: {
+    'menuContent': {
+      templateUrl: "templates/newPosting.html",
+      controller: 'NewPostingCtrl'
     }
-  })
+  }
+})
 
-  .state('app.singleEntry', {
-    url: "/single/:objectId",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/singleEntry.html",
-        controller: 'SingleEntryCtrl'
-      }
+.state('app.singleEntry', {
+  url: "/single/:objectId",
+  views: {
+    'menuContent': {
+      templateUrl: "templates/singleEntry.html",
+      controller: 'SingleEntryCtrl'
     }
-  })
-  .state('app.editEntry', {
+  }
+})
+    .state('app.editEntry', {
     url: "/singleEdit/:objectId",
     views: {
       'menuContent': {
