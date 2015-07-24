@@ -5690,7 +5690,6 @@ input, button, select, textarea {
     appearance: none;
     margin: 0;
     padding-right: 24px;
-    width: 50px;
     background-color: transparent; }
   .item-input .button .icon {
     -webkit-box-flex: 0;
@@ -7695,12 +7694,8 @@ a.button {
   transition-duration: 0s; }
 
 .errorMessage {
-  color: #D46A6A;
-}
+  color: #D46A6A; }
 
-.editButton {
-  float: right;
-}
 /* allows the bar-footer to be elastic /*
 /* optionally set a max-height */
 /* maxlength on the textarea will prevent /*
