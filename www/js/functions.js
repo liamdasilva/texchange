@@ -20,7 +20,30 @@ var getPostings = function(tableName, user){
   return promise;
 }
 
-//this returns a Parse object containing user1 and user2
+//returns a list of Parse objects containing sell posts and authors
+var getPostingsByCourseCode = function(tableName, courseCode){
+  var query = new Parse.Query(tableName);
+  query.equalTo("courseCode",courseCode);
+  query.include("author");
+  var postings = [];
+  //set up a promise to return
+  var promise = new Parse.Promise();
+  query.find().then(function(results) {
+    for (var i = 0; i < results.length; i++) {
+      var object = results[i].toJSON();
+      object.author = results[i].get("author").toJSON();
+      postings.push(object);
+    }
+    //fires the .then() in the code calling this function
+    promise.resolve(postings);
+  },function(error){
+    //fires the error part in the .then() in the code calling this function
+    promise.reject("Error: " + error.message);
+  });
+  return promise;
+}
+
+//this returns a list of Parse objects containing user1 and user2
 var getConversations = function(){
   var query = new Parse.Query("Conversations");
   query.include("user1");
@@ -195,7 +218,6 @@ var savePosting = function(postData, tableName, visible){
       myACL.setPublicReadAccess(true);
       posting.setACL(myACL);
     }
-    
     posting.save(null, {
       success: function(user) {
         promise.resolve("Save successful",user);
@@ -312,13 +334,18 @@ var getMessages = function(conversationID){
   return promise;
 }
 
-var getAllPostsByTitle = function(title, tableName){
-  var query = new Parse.Query(tableName);
-  query.matches("title", "("+title+")", "i");   
+var getAllPostsByTitle = function(search, tableName){
+  var queryTitle = new Parse.Query(tableName);
+  queryTitle.matches("title", "("+search+")", "i");
+  var queryCode = new Parse.Query(tableName);
+  queryCode.matches("courseCode", "("+search+")", "i");
+  var mainQuery = Parse.Query.or(queryCode,queryTitle);
   var promise = new Parse.Promise();
   var postings = [];
   query.find().then(function(results) {
 
+
+  mainQuery.find().then(function(results) {
     for (var i = 0; i < results.length; i++) {
       var object = results[i].toJSON();
       postings.push(object);
@@ -333,7 +360,34 @@ var getAllPostsByTitle = function(title, tableName){
   return promise;
 }
 
+var setVisibilityById = function(tableName,ID,visibility){
+  // Create a pointer to an object of class tableName with id ID
+  var Posting = Parse.Object.extend(tableName);
+  var posting = new Posting();
+  posting.id = ID;
 
+  // Set a new value on quantity
+  posting.set("visibility", visibility);
+  if(!visibility){
+    posting.setACL(new Parse.ACL(Parse.User.current()));
+  }else{
+    var myACL = new Parse.ACL(Parse.User.current());
+    myACL.setPublicReadAccess(true);
+    posting.setACL(myACL);
+  }
+  var promise = new Parse.Promise();
+  // Save
+  posting.save(null, {
+    success: function(post) {
+      promise.resolve("Save successful",post);
+    },
+    error: function(post, error) {
+      // The save failed.
+      promise.reject("Error: " + error.message);
+    }
+  });
+  return promise;
+}
 
 var updateMessages = function(conversationID, lastUpdated, otherUserID){
   console.log(lastUpdated);

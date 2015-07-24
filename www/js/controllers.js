@@ -10,10 +10,20 @@
     //});
 
 
+
+.controller('AppCtrl', ['$scope', '$ionicHistory','dashboardEntries','$state', function($scope, $ionicHistory,dashboardEntries,$state) {
+  // With the new view caching in Ionic, Controllers are only called
+  // when they are recreated or on app start, instead of every page change.
+  // To listen for when this page is active (for example, to refresh data),
+  // listen for the $ionicView.enter event:
+  //$scope.$on('$ionicView.enter', function(e) {
+  //});
   $scope.doLogout = function(){
     console.log("logged out");
     Parse.User.logOut();
     alert("You are now logged out");
+    dashboardEntries.setBuying([]);
+    dashboardEntries.setSelling([]);
     $ionicHistory.nextViewOptions({
       disableBack: true
     });
@@ -23,6 +33,76 @@
   .controller('LoginCtrl', ['$scope', '$ionicModal', '$ionicHistory', '$state', function($scope, $ionicModal, $ionicHistory,$state) {
     $scope.$on('$ionicView.enter', function(e) {
       if(Parse.User.current()){
+.controller('LoginCtrl', ['$scope', '$ionicModal','dashboardEntries', '$ionicHistory', '$state', function($scope, $ionicModal,dashboardEntries, $ionicHistory,$state) {
+  $scope.$on('$ionicView.enter', function(e) {
+    if(Parse.User.current()){
+      $ionicHistory.nextViewOptions({
+        disableBack: true
+      });
+      $state.go('app.dashboard');
+    }
+  });
+  // Form data for the login view
+  $scope.loginData = {};
+  $scope.loginData.username="";
+  $scope.loginData.password="";
+
+  // Form data for the singup modal
+  $scope.signUpData = {};
+  $scope.signUpData.username="";
+  $scope.signUpData.email="";
+  $scope.signUpData.firstName="";
+  $scope.signUpData.lastName="";
+  $scope.signUpData.password="";
+  $scope.signUpData.passwordc="";
+  $scope.signUpErrorMessage = "";
+  $scope.signUpError = false;
+  $scope.passMatch = false;
+  $scope.incomplete = true;
+  $scope.signupData = {};
+  $scope.signupData.username="";
+  $scope.signupData.email="";
+  $scope.signupData.firstName="";
+  $scope.signupData.lastName="";
+  $scope.signupData.password="";
+  $scope.signupData.passwordc="";
+
+  // Create the login modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/signup.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.signupModal = modal;
+  });
+
+  // Triggered in the login modal to close it
+  $scope.closeSignup = function() {
+    $scope.signupModal.hide();
+  };
+  // Open the login modal
+  $scope.signup = function() {
+    $scope.signupModal.show();
+  };
+
+  // Perform the login action when the user submits the login form
+  $scope.doLogin = function() {
+    console.log('Doing login');
+    Parse.User.logIn($scope.loginData.username, $scope.loginData.password,{
+      success: function(user){
+
+        //load the dashboard entries upon login
+        var user = Parse.User.current();
+        getPostings("Buyer",user).then(function(result){
+          dashboardEntries.setBuying(result);
+        }, function(error){
+          console.log(error);
+        });
+        getPostings("Seller",user).then(function(result){
+          dashboardEntries.setSelling(result);
+        }, function(error){
+          console.log(error);
+        });
+        $scope.name = user.get("firstName");
+        alert("Hello " + $scope.name + ", you are now logged in.");
         $ionicHistory.nextViewOptions({
           disableBack: true
         });
@@ -159,6 +239,54 @@
         if ($scope.search.option == "Buying"){
           getAllPostsByTitle($scope.search.text, "Buyer").then(function(result){
             console.log(result[0]);
+.controller('DashboardCtrl', ['$scope','$location','$ionicLoading','dashboardEntries',function($scope,$location,$ionicLoading,dashboardEntries) {
+  $ionicLoading.show({
+    content: 'Loading',
+    animation: 'fade-in',
+    showBackdrop: true,
+    maxWidth: 200,
+    showDelay: 0
+  });
+  $scope.entries = {};
+  var user = Parse.User.current();
+  getPostings("Buyer",user).then(function(result){
+    $scope.entries.buying = result;
+    dashboardEntries.setBuying($scope.entries.buying);
+  }, function(error){
+    console.log(error);
+  });
+  getPostings("Seller",user).then(function(result){
+    $scope.entries.selling = result;
+    dashboardEntries.setSelling($scope.entries.selling);
+    $ionicLoading.hide();
+  }, function(error){
+    console.log(error);
+  });
+  
+  $scope.refresh = function(){
+    $scope.entries = {};
+    $scope.entries.buying = dashboardEntries.getBuying();
+    $scope.entries.selling = dashboardEntries.getSelling();
+    $scope.$broadcast("scroll.refreshComplete");
+  }
+  $scope.setMode = function(table,index){
+    dashboardEntries.setIndex(index);
+    dashboardEntries.setTableName(table);
+  }
+}])
+
+.controller('SearchCtrl', ['$scope','$window',function($scope,$window) {
+   // var user = Parse.User.current();
+    $scope.search = {};
+    $scope.search.option = "Buying";
+   // console.log($scope.search.option);
+    //console.log($scope.search.text);
+    $scope.getSearchResults = function(){
+      console.log($scope.search.text);
+      console.log($scope.search.option);
+      if ($scope.search.option == "Buying"){
+        getAllPostsByTitle($scope.search.text, "Buyer").then(function(result){
+          console.log(result[0]);
             $scope.results  = result;
 
             $scope.noResults = $scope.results.length == 0;
@@ -262,6 +390,9 @@
   });
   }else{
     $scope.conversations = conversationsService.getConversation($scope.conversationID);
+.controller('ConversationsCtrl', ['$scope','conversationsService',function($scope, conversationsService) {
+  $scope.refresh = function(){
+    $window.location.reload();
   }
 
   $scope.History = [];
@@ -346,6 +477,43 @@ $scope.$on("$destroy", function (event) {
 
   .controller('NewPostingCtrl', ['$scope','$state','dashboardEntries',function($scope,$state,dashboardEntries) {
     $scope.posting = {};
+.controller('NewPostingCtrl', ['$scope','$state','dashboardEntries',function($scope,$state,dashboardEntries) {
+  $scope.posting = {};
+  $scope.posting.courseCode = "";
+  $scope.posting.price = "";
+  $scope.posting.edition = "";
+  $scope.posting.title = "";
+  $scope.posting.condition = "Good";
+  $scope.mode = dashboardEntries.getTableName();
+  //console.log($scope.mode);
+
+  $scope.save = function(){
+    savePosting($scope.posting,$scope.mode, false).then(function(result,object){
+      alert("Save successful");
+      afterSave(object);
+
+    }, function(error){
+      alert(error);
+    });
+  }
+  $scope.post = function(){
+    //save buy posting with visibility as true
+    savePosting($scope.posting,$scope.mode, true).then(function(result,object){
+      alert("Post successful");
+      afterSave(object);
+    }, function(error){
+      alert(error);
+    });
+  }
+  var afterSave = function(object){
+    //update the dashboard list of sell posts
+    if ($scope.mode == "Buyer"){
+      dashboardEntries.getBuying().push(object.toJSON());
+    }else if ($scope.mode == "Seller"){
+      dashboardEntries.getSelling().push(object.toJSON());
+    }
+    //reset the form before leaving
+
     $scope.posting.courseCode = "";
     $scope.posting.price = "";
     $scope.posting.edition = "";
@@ -401,13 +569,64 @@ $scope.$on("$destroy", function (event) {
 
     $scope.save = function(){
       updatePostingById($scope.mode,$stateParams.objectId,$scope.posting).then(function(result,object){
+.controller('SingleEntryCtrl', ['$scope', '$stateParams','$state','dashboardEntries',function($scope, $stateParams,$state,dashboardEntries) {
+  if (dashboardEntries.getIndex() == -1){
+    $state.go('app.dashboard');
+  }
+  $scope.mode = dashboardEntries.getTableName();
+  //console.log($scope.mode);
+  var i = dashboardEntries.getIndex();
+  if ($scope.mode == "Buyer"){
+    $scope.posting = dashboardEntries.getBuying()[i];
+  }else{
+    $scope.posting = dashboardEntries.getSelling()[i];
+  }
+  $scope.objectId = $stateParams.objectId;
+  if ($scope.mode == "Seller"){
+    getPostingsByCourseCode("Buyer",$scope.posting.courseCode).then(function(result){
+      $scope.buyers = result;
+    }, function(error){
+      console.log(error);
+    });
+  }else if ($scope.mode == "Buyer"){
+    getPostingsByCourseCode("Seller",$scope.posting.courseCode).then(function(result){
+      $scope.sellers = result;
+    }, function(error){
+      console.log(error);
+    });
+  }
+}])
+
+.controller('EditEntryCtrl', ['$scope', '$ionicHistory','$stateParams','$state','dashboardEntries',function($scope, $ionicHistory,$stateParams,$state,dashboardEntries) {
+  if (dashboardEntries.getIndex() == -1){
+    $state.go('app.dashboard');
+  }
+  $scope.form={};
+  $scope.mode = dashboardEntries.getTableName();
+  //console.log($scope.mode);
+  var i = dashboardEntries.getIndex();
+  if ($scope.mode == "Buyer"){
+    $scope.posting = dashboardEntries.getBuying()[i];
+  }else{
+    $scope.posting = dashboardEntries.getSelling()[i];
+    $scope.form.condition = $scope.posting.condition;
+  }
+  $scope.form.courseCode = $scope.posting.courseCode;
+  $scope.form.title = $scope.posting.title;
+  $scope.form.edition = $scope.posting.edition;
+  $scope.form.price = $scope.posting.price;
+
+  $scope.save = function(){
+    $scope.posting.courseCode = $scope.form.courseCode;
+    $scope.posting.title = $scope.form.title;
+    $scope.posting.edition = $scope.form.edition;
+    $scope.posting.price = $scope.form.price;
+    if ($scope.mode == "Seller"){$scope.posting.condition = $scope.form.condition;}
+    updatePostingById($scope.mode,$stateParams.objectId,$scope.posting).then(function(result,object){
         alert(result);
-        var i = dashboardEntries.getIndex();
-        if ($scope.mode == "Buyer"){
-          dashboardEntries.getEntries().buying[i] = object.toJSON();
-        }else{
-          dashboardEntries.getEntries().selling[i] = object.toJSON();
-        }
+        $ionicHistory.nextViewOptions({
+          disableBack: true
+        });
         $state.go('app.dashboard');
       },function(error){
         alert(error);
@@ -416,17 +635,40 @@ $scope.$on("$destroy", function (event) {
     $scope.delete = function(){
       deletePostingById($scope.mode,$stateParams.objectId).then(function(result){
         alert(result);
-        var i = dashboardEntries.getIndex();
         if ($scope.mode == "Buyer"){
-          dashboardEntries.getEntries().buying.splice(i,1);
+          dashboardEntries.getBuying().splice(i,1);
         }else{
-          dashboardEntries.getEntries().selling.splice(i,1);
+          dashboardEntries.getSelling().splice(i,1);
         }
+        $scope.$apply();
+        $ionicHistory.nextViewOptions({
+          disableBack: true
+        });
         $state.go('app.dashboard');
+    },function(error){
+      alert(error);
+    });
+  }
+  $scope.togglePublish = function(){
+    if ($scope.mode == "Buyer"){
+      setVisibilityById($scope.mode,$stateParams.objectId,!dashboardEntries.getBuying()[i].visibility).then(function(result){
+        alert(result);
+        dashboardEntries.getBuying()[i].visibility = !dashboardEntries.getBuying()[i].visibility;
+        $scope.$apply();
+      },function(error){
+        alert(error);
+      });
+    }else{
+      setVisibilityById($scope.mode,$stateParams.objectId,!dashboardEntries.getSelling()[i].visibility).then(function(result){
+        alert(result);
+        dashboardEntries.getSelling()[i].visibility = !dashboardEntries.getSelling()[i].visibility;
       },function(error){
         alert(error);
       });
     }
     
   }]);
+  }
+}]);
+
 
