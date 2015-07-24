@@ -369,7 +369,11 @@ var setVisibilityById = function(tableName,ID,visibility){
   // Save
   posting.save(null, {
     success: function(post) {
-      promise.resolve("Save successful",post);
+      if (visibility){
+        promise.resolve("Published successfully.",post);
+      }else{
+        promise.resolve("Unpublished successfully.",post);
+      }
     },
     error: function(post, error) {
       // The save failed.

@@ -1,12 +1,8 @@
-<ion-view view-title="View Single Entry">
-  <ion-nav-buttons side="right">
-    <a class="button button-assertive" href = "#/app/singleEdit/{{objectId}}">
-      Edit
-    </a>
-  </ion-nav-buttons>
+<ion-view >
+  <ion-nav-title>
+      <p>{{posting.author.name}}</p>
+  </ion-nav-title>
   <ion-content class = "padding">
-    <h4 ng-show = !posting.visibility align = "center" class="title">This post is currently visible to only you.</h4>
-    <h4 ng-show = posting.visibility align = "center" class="title">This post is publicly visible.</h4>
     <form name = myForm>
       <ion-list ion-list-inset>
         <label class="item item-input">
@@ -33,11 +29,12 @@
       </ion-list>
     </form>
     <div ng-if ="mode == 'Seller'">
-      <h4 ng-if = "buyers.length!=1">There are {{buyers.length}} buyers:</h4>
+      <h4 ng-if = "buyers.length!=1">This person has {{buyers.length}} buyers:</h4>
       <h4 ng-if = "buyers.length==1">There is 1 buyer:</h4>
       <ion-list>
-        <ion-item ng-repeat="buyer in buyers" ng-click = "sendPost($index)" href="#/app/viewPostings/{{buyer.objectId}}">
-          {{buyer.price|currency}} - {{buyer.title}}
+        <ion-item ng-repeat="buyer in buyers">
+          {{buyer.author.firstName}} {{buyer.author.lastName}} -
+          {{buyer.title}} - Looking price: {{buyer.price|currency}}
         </ion-item>
         <ion-item ng-show="buyers.length==0">
           <div class=errorMessage >No current buyers</div>

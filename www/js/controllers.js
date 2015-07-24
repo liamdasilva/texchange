@@ -319,7 +319,7 @@ angular.module('app.controllers', [])
   }
 }])
 
-.controller('SingleEntryCtrl', ['$scope', '$stateParams','$state','dashboardEntries',function($scope, $stateParams,$state,dashboardEntries) {
+.controller('SingleEntryCtrl', ['$scope', '$stateParams','$state','dashboardEntries','viewPosting',function($scope, $stateParams,$state,dashboardEntries,viewPosting) {
   if (dashboardEntries.getIndex() == -1){
     $state.go('app.dashboard');
   }
@@ -344,6 +344,15 @@ angular.module('app.controllers', [])
     }, function(error){
       console.log(error);
     });
+  }
+
+  $scope.sendPost = function(index){
+    viewPosting.setPosting($scope.buyers[index]);
+    if($scope.mode == "Buyer")
+      viewPosting.setTableName("Seller");
+    else{
+      viewPosting.setTableName("Buyer");
+    }
   }
 }])
 
@@ -417,6 +426,14 @@ angular.module('app.controllers', [])
       });
     }
   }
+}])
+
+.controller('ViewPostingsCtrl', ['$scope', '$stateParams','$state','viewPosting',function($scope, $stateParams,$state,viewPosting) {
+  
+  $scope.objectId = $stateParams.objectId;
+  $scope.posting = viewPosting.getPosting();
+  $scope.mode = viewPosting.getTableName();
+  
 }]);
 
 

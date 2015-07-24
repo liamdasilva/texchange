@@ -52,7 +52,6 @@ angular.module('app.services', [])
   };
 })
 
-
 .service('conversationsService', [function(conversationsService) {
   var conversations = [];
   function set(data) {
@@ -80,3 +79,23 @@ angular.module('app.services', [])
   getConversation: getConversation
  }
 }])
+
+.service('viewPosting', function () {
+  //initialize index at -1 for error checking in single entry controller
+  var tableName = "";
+  var entry = {};
+  return {
+      getPosting: function(value) {
+          return entry;
+      },
+      setPosting: function(value) {
+        entry = value;
+      },
+      getTableName: function(){
+        return tableName;
+      },
+      setTableName: function(value){
+        tableName = value;
+      }
+  };
+})

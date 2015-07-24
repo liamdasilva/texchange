@@ -5,22 +5,6 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 angular.module('app', ['ionic', 'app.controllers','app.services'])
-.directive( 'goClick', function ( $location ) {
-  return function ( scope, element, attrs ) {
-    var path;
-    
-    attrs.$observe( 'goClick', function (val) {
-      path = val;
-    });
-    
-    element.bind( 'click', function () {
-      scope.$apply( function () {
-        $location.path( path );
-        console.log(path);
-      });
-    });
-  };
-})
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -129,6 +113,16 @@ angular.module('app', ['ionic', 'app.controllers','app.services'])
       'menuContent': {
         templateUrl: "templates/editEntry.html",
         controller: 'EditEntryCtrl'
+      }
+    }
+  })
+
+  .state('app.viewPostings', {
+    url: "/viewPostings/:objectId",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/viewPostings.html",
+        controller: 'ViewPostingsCtrl'
       }
     }
   })
