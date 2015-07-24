@@ -20,6 +20,7 @@ angular.module('app.services', [])
   };
 })
 
+
 .service('dashboardEntries', function () {
   //initialize index at -1 for error checking in single entry controller
   var index = -1;
@@ -45,29 +46,6 @@ angular.module('app.services', [])
   }
   
   return {
-    getEntries: function () {
-      return entries;
-    },
-    setBuying: function(value) {
-      entries.buying = value;
-      entries.noBuyPostings = value.length ==0;
-    },
-    setSelling: function(value) {
-      entries.selling = value;
-      entries.noSellPostings = value.length == 0;
-    },
-    getIndex: function(){
-      return index;
-    },
-    setIndex: function(value){
-      index = value;
-    },
-    getTableName: function(){
-      return tableName;
-    },
-    setTableName: function(value){
-      tableName = value;
-    }
       getBuying: function(value) {
           return entries.buying;
       },
@@ -95,3 +73,22 @@ angular.module('app.services', [])
   };
 })
 
+.service('viewPosting', function () {
+  //initialize index at -1 for error checking in single entry controller
+  var tableName = "";
+  var entry = {};
+  return {
+      getPosting: function(value) {
+          return entry;
+      },
+      setPosting: function(value) {
+        entry = value;
+      },
+      getTableName: function(){
+        return tableName;
+      },
+      setTableName: function(value){
+        tableName = value;
+      }
+  };
+})

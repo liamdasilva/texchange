@@ -342,8 +342,6 @@ var getAllPostsByTitle = function(search, tableName){
   var mainQuery = Parse.Query.or(queryCode,queryTitle);
   var promise = new Parse.Promise();
   var postings = [];
-  query.find().then(function(results) {
-
 
   mainQuery.find().then(function(results) {
     for (var i = 0; i < results.length; i++) {
