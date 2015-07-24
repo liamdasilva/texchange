@@ -1,0 +1,43 @@
+<ion-view view-title="Edit Entry">
+  <ion-content class = "padding">
+    <h4 ng-show = !posting.visibility align = "center" class="title">This post is currently visible to only you.</h4>
+    <h4 ng-show = posting.visibility align = "center" class="title">This post is publicly visible.</h4>
+    <form name = myForm>
+      <ion-list ion-list-inset>
+        <label class="item item-input">
+          <span class="input-label">Course Code</span>
+          <input type="text" name = "courseCode" placeholder = "Course Code" ng-model="form.courseCode" required>
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Textbook Name</span>
+          <input type="text" name = "title" placeholder = "Textbook Name" ng-model="form.title" required>
+        </label>
+        <label class="item item-input">
+          <span ng-if ="mode == 'Buyer'"class="input-label">Looking Price</span>
+          <span ng-if ="mode == 'Seller'"class="input-label">Asking Price</span>
+          <input type="text" name = "price" placeholder = "Price" ng-model="form.price" required>
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Edition</span>
+          <input type="text" name = "edition" placeholder = "Edition" ng-model="form.edition">
+        </label>
+        <label ng-if ="mode == 'Seller'" class="item item-input item-select">
+          <span class="input-label">Condition</span>
+          <select name = "condition" ng-model="form.condition">
+            <option>Excellent</option>
+            <option>Good</option>
+            <option>Average</option>
+            <option>Poor</option>
+          </select>
+        </label>
+        <div class="button-bar">
+        <a ng-if ="mode == 'Buyer'" class="button button-dark" ng-disabled="myForm.courseCode.$pristine && myForm.title.$pristine && myForm.price.$pristine && myForm.edition.$pristine" ng-click="save()">Save</a>
+        <a ng-if ="mode == 'Seller'" class="button button-dark" ng-disabled="myForm.courseCode.$pristine && myForm.title.$pristine && myForm.price.$pristine && myForm.edition.$pristine && myForm.condition.$pristine"ng-click="save()">Save</a>
+        <a class="button button-dark" ng-show = !posting.visibility ng-click="togglePublish()">Publish</a>
+        <a class="button button-dark" ng-show = posting.visibility ng-click="togglePublish()">Unpublish</a>
+	    </div>
+	    <a class="button button-block button-assertive" ng-click="delete()">Delete</a>
+      </ion-list>
+    </form>
+  </ion-content>
+</ion-view>

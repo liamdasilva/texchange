@@ -1,42 +1,70 @@
 <ion-view view-title="View Single Entry">
+  <ion-nav-buttons side="right">
+    <a class="button button-assertive" href = "#/app/singleEdit/{{objectId}}">
+      Edit
+    </a>
+  </ion-nav-buttons>
   <ion-content class = "padding">
-    <div align = "center" ng-show = !posting.visibility>This post is currently visible to only you.</div>
-    <div align = "center" ng-show = posting.visibility>This post is publicly visible.</div>
-    <form>
+    <h4 ng-show = !posting.visibility align = "center" class="title">This post is currently visible to only you.</h4>
+    <h4 ng-show = posting.visibility align = "center" class="title">This post is publicly visible.</h4>
+    <form class="has-header" name = myForm>
       <ion-list ion-list-inset>
         <label class="item item-input">
           <span class="input-label">Course Code</span>
-          <input type="text" placeholder = "Course Code" ng-model="posting.courseCode">
+          <input disabled = true type="text" name = "courseCode" placeholder = "Course Code" ng-model="posting.courseCode" required>
         </label>
         <label class="item item-input">
           <span class="input-label">Textbook Name</span>
-          <input type="text" placeholder = "Textbook Name" ng-model="posting.title">
+          <input disabled = true type="text" name = "title" placeholder = "Textbook Name" ng-model="posting.title" required>
         </label>
         <label class="item item-input">
           <span ng-if ="mode == 'Buyer'"class="input-label">Looking Price</span>
           <span ng-if ="mode == 'Seller'"class="input-label">Asking Price</span>
-          <input type="text" placeholder = "Price" ng-model="posting.price">
+          <input disabled = true type="text" name = "price" placeholder = "Price" ng-model="posting.price" required>
         </label>
         <label class="item item-input">
           <span class="input-label">Edition</span>
-          <input type="text" placeholder = "Edition" ng-model="posting.edition">
+          <input disabled = true type="text" name = "edition" placeholder = "Edition" ng-model="posting.edition">
         </label>
         <label ng-if ="mode == 'Seller'" class="item item-input item-select">
           <span class="input-label">Condition</span>
-          <select ng-model="posting.condition">
+          <select disabled = true name = "condition" ng-model="posting.condition">
             <option>Excellent</option>
             <option>Good</option>
             <option>Average</option>
             <option>Poor</option>
           </select>
         </label>
-        <div class="button-bar">
-        <a class="button button-dark" ng-disabled = changeMade ng-click="save()">Save</a>
-        <a class="button button-dark" ng-show = !posting.visibility ng-click="togglePublish()">Publish</a>
-        <a class="button button-dark" ng-show = posting.visibility ng-click="togglePublish()">Unpublish</a>
-	    </div>
-	    <a class="button button-block button-assertive" ng-click="delete()">Delete</a>
       </ion-list>
     </form>
+    <div ng-if ="mode == 'Seller'">
+      <h4 ng-if = "buyers.length!=1">There are {{buyers.length}} buyers:</h4>
+      <h4 ng-if = "buyers.length==1">There is 1 buyer:</h4>
+      <ion-list>
+        <ion-item ng-repeat="buyer in buyers">
+          {{buyer.author.firstName}} {{buyer.author.lastName}} -
+          {{buyer.title}} - Looking price: {{buyer.price|currency}}
+        </ion-item>
+        <ion-item ng-show="buyers.length==0">
+          <div class=errorMessage >No current buyers</div>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <div ng-if ="mode == 'Buyer'">
+      <h4 ng-if = "sellers.length!=1">There are {{sellers.length}} sellers:</h4>
+      <h4 ng-if = "sellers.length==1">There is 1 seller:</h4>
+      <ion-list>
+        <ion-item ng-repeat="seller in sellers">
+          {{seller.author.firstName}} {{seller.author.lastName}} -
+          {{seller.title}} - Asking price: {{seller.price|currency}}
+        </ion-item>
+        <ion-item ng-show="sellers.length==0">
+          <div class=errorMessage >No current sellers</div>
+        </ion-item>
+      </ion-list>
+    </div>
+
+    
   </ion-content>
 </ion-view>

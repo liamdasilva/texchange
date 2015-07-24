@@ -5,7 +5,22 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 angular.module('app', ['ionic', 'app.controllers','app.services'])
-
+.directive( 'goClick', function ( $location ) {
+  return function ( scope, element, attrs ) {
+    var path;
+    
+    attrs.$observe( 'goClick', function (val) {
+      path = val;
+    });
+    
+    element.bind( 'click', function () {
+      scope.$apply( function () {
+        $location.path( path );
+        console.log(path);
+      });
+    });
+  };
+})
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -35,7 +50,7 @@ angular.module('app', ['ionic', 'app.controllers','app.services'])
       url: "/login",
       templateUrl: "templates/login.html",
       controller: 'LoginCtrl'
-    })
+  })
 
   .state('app.search', {
     url: "/search",
@@ -64,7 +79,6 @@ angular.module('app', ['ionic', 'app.controllers','app.services'])
   })
 
    .state('app.dashboard', {
-    cache: false,
     url: "/dashboard",
     views: {
       'menuContent': {
@@ -106,6 +120,15 @@ angular.module('app', ['ionic', 'app.controllers','app.services'])
       'menuContent': {
         templateUrl: "templates/singleEntry.html",
         controller: 'SingleEntryCtrl'
+      }
+    }
+  })
+  .state('app.editEntry', {
+    url: "/singleEdit/:objectId",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/editEntry.html",
+        controller: 'EditEntryCtrl'
       }
     }
   })

@@ -1,39 +1,41 @@
 angular.module('app.services', [])
 
 .service('dashboardEntries', function () {
-  var user = Parse.User.current();
+  //initialize index at -1 for error checking in single entry controller
+  var index = -1;
+  var tableName = "";
   var entries = {
     buying: [],
-    noBuyPostings: true,
-    selling: [],
-    noSellPostings: true
-  };
-  var index = 0;
-  var tableName = "";
-  getPostings("Buyer",user).then(function(result){
-    entries.buying = result;
-    entries.noBuyPostings = result.length == 0;
-  }, function(error){
-    console.log("dashboardEntries service error: " + error);
-  });
-  getPostings("Seller",user).then(function(result){
-    entries.selling = result;
-    entries.noSellPostings = result.length == 0;
-  }, function(error){
-    console.log("dashboardEntries service error: " + error);
-  });
-
+    selling: []
+  }
+  //load dashboard entries on service intialization only if user is logged in
+  if(Parse.User.current()){
+    var user = Parse.User.current();
+    getPostings("Buyer",user).then(function(result){
+      entries.buying = result;
+    }, function(error){
+      console.log(error);
+    });
+    getPostings("Seller",user).then(function(result){
+      entries.selling = result;
+      //alert("Service - Dashboard reloaded");     
+    }, function(error){
+      console.log(error);
+    });
+  }
+  
   return {
-      getEntries: function () {
-          return entries;
+      getBuying: function(value) {
+          return entries.buying;
       },
       setBuying: function(value) {
-          entries.buying = value;
-          entries.noBuyPostings = value.length ==0;
+        entries.buying = value;
+      },
+      getSelling: function(value) {
+          return entries.selling;
       },
       setSelling: function(value) {
           entries.selling = value;
-          entries.noSellPostings = value.length == 0;
       },
       getIndex: function(){
         return index;

@@ -15,6 +15,10 @@
           <span ng-if ="mode == 'Buyer'"class="input-label">Looking Price</span>
           <input type="text" ng-model="posting.price">
         </label>
+        <label class="item item-input">
+          <span class="input-label">Edition</span>
+          <input type="text" ng-model="posting.edition">
+        </label>
         <label ng-if ="mode == 'Seller'" class="item item-input item-select">
           <span class="input-label">Condition</span>
           <select ng-model="posting.condition">
@@ -23,10 +27,6 @@
             <option>Average</option>
             <option>Poor</option>
           </select>
-        </label>
-        <label class="item item-input">
-          <span class="input-label">Edition</span>
-          <input type="text" ng-model="posting.edition">
         </label>
         <div class="button-bar">
         <a class="button button-dark" ng-click="save()">Save</a>

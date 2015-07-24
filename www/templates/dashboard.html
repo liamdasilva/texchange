@@ -1,6 +1,6 @@
 <ion-view view-title="Dashboard" class="title title-assertive">
-  <ion-content class = "padding">
-	  <ion-refresher
+  	<ion-content class = "padding">
+	<ion-refresher
 	    pulling-text="Pull to refresh..."
 	    on-refresh="refresh()">
 	  </ion-refresher>
@@ -12,7 +12,7 @@
 	    	{{buyPost.courseCode}}
 	        - {{buyPost.title}}
 	    </ion-item>
-	    <ion-item ng-show="entries.noBuyPostings">
+	    <ion-item ng-show="entries.buying.length==0">
 	    	<div class=errorMessage >No current buy postings</div>
 	    </ion-item>
 	    <ion-item class = "item-divider">
@@ -22,14 +22,17 @@
 	    	{{sellPost.courseCode}}
 	        - {{sellPost.title}}
 	    </ion-item>
-	    <ion-item ng-show="entries.noSellPostings">
+	    <ion-item ng-show="entries.selling.length==0">
 	    	<div class=errorMessage >No current sell postings</div>
 	    </ion-item>
     </ion-list>
-    <div class = "button-bar">
-    <a class= "button button-dark icon ion-android-chat" href="#/app/conversations"></a>
-    <a class= "button button-dark ion-plus-round icon-left" ng-click="setMode('Buyer',0)" href="#/app/newPosting">Buy</a>
-    <a class= "button button-dark ion-plus-round icon-left" ng-click="setMode('Seller',0)" href = "#/app/newPosting">Sell</a>
+    
+  	</ion-content>
+  	<div class = "bar bar-footer bar-dark">
+		<div class = "button-bar button-bar-clear">
+		    <a class= "button  button-clear button-positive icon ion-android-chat" href="#/app/conversations"></a>
+		    <a class= "button  button-clear icon-left ion-plus-round" ng-click="setMode('Buyer',0)" href="#/app/newPosting">Buy</a>
+		    <a class= "button button-clear ion-plus-round icon-left" ng-click="setMode('Seller',0)" href = "#/app/newPosting">Sell</a>
+		</div>
 	</div>
-  </ion-content>
 </ion-view>

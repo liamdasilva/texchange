@@ -9,29 +9,29 @@
     <div ng-show=signUpError class=errorMessage>{{signUpErrorMessage}}</div>
     <form>
       <div class="list">
-        <label class="item item-input">
+        <label class="item item-input item-floating-label">
           <span class="input-label">First Name</span>
-          <input type="text" ng-model="signUpData.firstName">
+          <input type="text" placeholder = "First Name" ng-model="signUpData.firstName">
         </label>
-        <label class="item item-input">
+        <label class="item item-input item-floating-label">
           <span class="input-label">Last Name</span>
-          <input type="text" ng-model="signUpData.lastName">
+          <input type="text" placeholder = "Last Name" ng-model="signUpData.lastName">
         </label>
-        <label class="item item-input">
+        <label class="item item-input item-floating-label">
           <span class="input-label">Username</span>
-          <input type="text" ng-model="signUpData.username">
+          <input type="text" placeholder = "Username" ng-model="signUpData.username">
         </label>
-        <label class="item item-input">
+        <label class="item item-input item-floating-label">
           <span class="input-label">Email</span>
-          <input type="text" ng-model="signUpData.email">
+          <input type="text" placeholder = "Email" ng-model="signUpData.email">
         </label>
-        <label class="item item-input">
+        <label class="item item-input item-floating-label">
           <span class="input-label">Password</span>
-          <input type="password" ng-model="signUpData.password">
+          <input type="password" placeholder = "Password" ng-model="signUpData.password">
         </label>
-        <label class="item item-input">
+        <label class="item item-input item-floating-label">
           <span class="input-label">Confirm Password</span>
-          <input type="password" ng-model="signUpData.passwordc">
+          <input type="password" placeholder = "Confirm Password" ng-model="signUpData.passwordc">
         </label>
         <label class="item">
           <button class="button button-block button-dark" ng-disabled="!passMatch||incomplete"ng-click = "doSignUp()">Sign Up</button>
