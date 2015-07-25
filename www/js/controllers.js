@@ -542,7 +542,6 @@ $scope.$on("$destroy", function (event) {
   }
 }])
 
-<<<<<<< HEAD
 .controller('ViewPostingsCtrl', ['$scope','$ionicLoading', '$stateParams','$state','viewPosting',function($scope,$ionicLoading, $stateParams,$state,viewPosting) {
   $ionicLoading.show({
     content: 'Loading',
@@ -584,12 +583,3 @@ $scope.$on("$destroy", function (event) {
   }
   
 }]);
-=======
-  .controller('ViewPostingsCtrl', ['$scope', '$stateParams','$state','viewPosting',function($scope, $stateParams,$state,viewPosting) {
-
-    $scope.objectId = $stateParams.objectId;
-    $scope.posting = viewPosting.getPosting();
-    $scope.mode = viewPosting.getTableName();
-
-  }]);
->>>>>>> 505dd4616efc8a2de93e2f76798c888b9d636eee
