@@ -15,13 +15,13 @@
 		</form>
 		<div ng-if="search.option == 'Buying'">
 		<ion-item ng-repeat="result in results" ng-click = "sendPost($index)" href="#/app/viewPostings/{{result.objectId}}">
-	    	{{result.courseCode}}
+	    	{{result.price|currency}}
 	        - {{result.title}}
 	 	</ion-item>
 	</div>
 	<div ng-if="search.option == 'Selling'">
      	<ion-item ng-repeat="result in results" ng-click = "sendPost($index)" href="#/app/viewPostings/{{result.objectId}}">
-	    	{{result.courseCode}}
+	    	{{result.price|currency}}
 	        - {{result.title}}
  		</ion-item>
 	</div>
