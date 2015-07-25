@@ -18,6 +18,7 @@ $dark:                            #444 !default;
 $energized: teal;
 
 
+
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
@@ -86,14 +87,6 @@ at the bottom as the textarea resizes */
   max-width: 80%;
 }
 
-.chat-bubble:before {
-  content: "\00a0";
-  display: block;
-  height: 10px;
-  width: 5px;
-  position: absolute;
-  bottom: -7.5px;
-}
 
 .chat-bubble.left {
   background-color: #f4f4f4;

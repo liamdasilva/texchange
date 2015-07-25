@@ -7743,14 +7743,6 @@ at the bottom as the textarea resizes */
   margin: 5px;
   max-width: 80%; }
 
-.chat-bubble:before {
-  content: "\00a0";
-  display: block;
-  height: 10px;
-  width: 5px;
-  position: absolute;
-  bottom: -7.5px; }
-
 .chat-bubble.left {
   background-color: #f4f4f4;
   float: left;

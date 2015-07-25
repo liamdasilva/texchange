@@ -19,6 +19,13 @@ angular.module('app', ['ionic', 'app.controllers','app.services'])
   });
 })
 
+/*
+The config file sets up the routing for the app. 
+Each "state" has an associated template to set up each view, 
+a controller that will call functions relevant to that view,
+set a URL for a subsystem, as well as any state params to send to
+an email. */
+
 .config(['$stateProvider','$urlRouterProvider',
   function($stateProvider, $urlRouterProvider) {
     $stateProvider
@@ -34,7 +41,7 @@ angular.module('app', ['ionic', 'app.controllers','app.services'])
       url: "/login",
       templateUrl: "templates/login.html",
       controller: 'LoginCtrl'
-  })
+    })
 
     .state('app.search', {
       url: "/search",
@@ -52,84 +59,73 @@ angular.module('app', ['ionic', 'app.controllers','app.services'])
       views: {
         'menuContent': {
           templateUrl: "templates/conversations.html",
-		    controller: 'ConversationsCtrl'/*,
-        resolve: { 
-         conversations: function(ConversationsService) {  
-         return ConversationsService.getConversations(Parse.User.current())
-           }
-         }*/
-       }
-     }
-   })
-
-  
-   .state('app.dashboard', {
-    url: "/dashboard",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/dashboard.html",
-        controller: 'DashboardCtrl'
+          controller: 'ConversationsCtrl'
+        }
       }
-    }})
+    })
+
+
+    .state('app.dashboard', {
+      url: "/dashboard",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/dashboard.html",
+          controller: 'DashboardCtrl'
+        }
+      }})
 
     .state('app.messaging', {
       cache: false,
       url: "/conversations/:conversationID",
-        // this param is not part of url
-        // it could be passed with $state.go or ui-sref 
+
       
       views: {
         'menuContent': {
           templateUrl: "templates/messaging.html",
-        controller: 'MessagingCtrl'/*,
-         resolve: {
-         conversation: function($stateParams, ConversationsService) {   
-        return ConversationsService.getConversation($stateParams.conversationID)
+          controller: 'MessagingCtrl'
+
+        }
       }
-    }*/
+    })
 
-  }
-}
-})
+    .state('app.newPosting', {
+      url: "/newPosting",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/newPosting.html",
+          controller: 'NewPostingCtrl'
+        }
+      }
+    })
 
-.state('app.newPosting', {
-  url: "/newPosting",
-  views: {
-    'menuContent': {
-      templateUrl: "templates/newPosting.html",
-      controller: 'NewPostingCtrl'
-    }
-  }
-})
-
-.state('app.singleEntry', {
-  url: "/single/:objectId",
-  views: {
-    'menuContent': {
-      templateUrl: "templates/singleEntry.html",
-      controller: 'SingleEntryCtrl'
-    }
-  }
-})
+    .state('app.singleEntry', {
+      url: "/single/:objectId",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/singleEntry.html",
+          controller: 'SingleEntryCtrl'
+        }
+      }
+    })
     .state('app.editEntry', {
-    url: "/singleEdit/:objectId",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/editEntry.html",
-        controller: 'EditEntryCtrl'
+      url: "/singleEdit/:objectId",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/editEntry.html",
+          controller: 'EditEntryCtrl'
+        }
       }
-    }
-  })
+    })
 
-  .state('app.viewPostings', {
-    url: "/viewPostings/:objectId",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/viewPostings.html",
-        controller: 'ViewPostingsCtrl'
+    .state('app.viewPostings', {
+      url: "/viewPostings/:objectId",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/viewPostings.html",
+          controller: 'ViewPostingsCtrl'
+        }
       }
-    }
-  })
+    })
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');

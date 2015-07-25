@@ -1,27 +1,39 @@
 var getPostings = function(tableName, user){
-  var query = new Parse.Query(tableName);
-  query.equalTo("author",user);
-  var postings = [];
-  //set up a promise to return
+  /* getPostings gets all postings from our Parse server.
+  Each table has a name. User would be a user object. 
+  This function is expected to be given "Buyer" or "Seller" as a 
+  tablename and the logged in user's Parse object and lets you get all buy and sell
+  postings for a user.
+  */
+  var query = new Parse.Query(tableName); //create the query object
+  query.equalTo("author",user); // set the user for whom the query is going to query for.
+  var postings = []; // create an empty postings list
+  //set up a promise to return, so the function can manage asyncynchronous calls.
   var promise = new Parse.Promise();
   query.find().then(function(results) {
       //alert("Successfully retrieved " + results.length + " buy posts.");
       // Do something with the returned Parse.Object values
       for (var i = 0; i < results.length; i++) {
-        var object = results[i].toJSON();
-        postings.push(object);
+        var object = results[i].toJSON(); //converts a Parse objec to a JSON for each access and viewing.
+        postings.push(object);  // pushes the converted object onto the postings list.
       }
       //fires the .then() in the code calling this function
-      promise.resolve(postings);
+      promise.resolve(postings); 
     },function(error){
       //fires the error part in the .then() in the code calling this function
       promise.reject("Error: " + error.message);
     });
-  return promise;
+  return promise; // when the call completes, this returns the postings
 }
 
 //returns a list of Parse objects containing sell posts and authors
 var getPostingsByCourseCode = function(tableName, courseCode){
+    /* getPostingsByCourseCode gets all postings from our Parse server.
+  Each table has a name. courseCode would be a course code string. 
+  This function is expected to be given "Buyer" or "Seller" as a 
+  tablename and the logged in user's Parse object and lets you get all buy and sell
+  postings for a given course code.
+  */
   var query = new Parse.Query(tableName);
   query.equalTo("courseCode",courseCode);
   query.include("author");
@@ -62,6 +74,10 @@ var getConversations = function(){
 }
 
 var getOtherConversationUser = function(conversations){
+  //this converts the list of Parse object containing user1 and user2 to a list of JSON objects
+  // to be used for the conversations and messaging subsystem. It only uses the relevant information
+  // which is the Parse User id, the conversation id, and their name (first name + last name)
+  //Parse object attributes are extracted using the .get command on each object.
   var newList = [];
   var user, user1;
   if(Parse.User.current()){
@@ -85,6 +101,11 @@ var getOtherConversationUser = function(conversations){
 }
 
 var getPostingById = function(tableName,id){
+      /* getPostingByID gets a posting object from our Parse server.
+  Each table has a name. id would be a object id associated with each posting. 
+  This function is expected to be given "Buyer" or "Seller" as a 
+  tablename and object id and lets you get the posting detail for that id. 
+  */
   var query = new Parse.Query(tableName);
   //set up a promise to return
   var promise = new Parse.Promise();
@@ -102,6 +123,8 @@ var getPostingById = function(tableName,id){
 
 var updatePostingById = function(tableName,ID,postData){
   // Create a pointer to an object of class tableName with id ID
+  // Based on a unique object id associated with a posting, it updates the
+  // posting detail with given posting date.
   var Posting = Parse.Object.extend(tableName);
   var posting = new Posting();
   posting.id = ID;
@@ -125,7 +148,7 @@ var updatePostingById = function(tableName,ID,postData){
 }
 
 var deletePostingById = function(tableName,ID){
-  // Create a pointer to an object of class tableName with id ID
+  // delete a posting object in the Parse database given a posting id.
   var Posting = Parse.Object.extend(tableName);
   var posting = new Posting();
   posting.id = ID;
@@ -167,6 +190,10 @@ var signUpNewUser = function(userData){
 }
 
 var savePosting = function(postData, tableName, visible){
+  //saves a posting to Parse, given its data and whether it is a
+  //buying or selling post. Users have the option of saving or publishing their post.
+  //If the user selects to save a posting, it will only be visible to them.
+  //If a user selects to publish a posting, it will be visible to all users.
   //set up a promise to return
   var promise = new Parse.Promise();
   if (tableName == "Buyer" && postData.courseCode != "" && postData.title != "" && postData.price != ""){
@@ -227,7 +254,7 @@ var savePosting = function(postData, tableName, visible){
       }
     });
   }else{
-    if (tableName == "Seller"){
+    if (tableName == "Seller"){ // Posting date requirements must be satisfied to post.
       promise.reject("All fields are required.");
     } else{
       promise.reject("Course Code, Textbook Name and Looking Price are required.");
@@ -237,6 +264,7 @@ var savePosting = function(postData, tableName, visible){
 }
 
 var pushToList = function (results){
+  //converts a list of object toJSON and return the new list.
 	var outputList = [];
 	for (var i = 0; i < results.length; i++)
 	{
@@ -248,6 +276,7 @@ var pushToList = function (results){
     }
 
     var getListOfUsernames = function(ListofUsers){
+      // gets a list of of usersname based on their on their objectID
      var userList = [];
      for (var i = 0; i < ListofUsers.length; i++) {
       getUsernamesByID(ListofUsers[i]).then(function(results){
@@ -259,6 +288,7 @@ var pushToList = function (results){
 
 
   var getUsernamesByID = function(userID){
+    //gets  a username based on their user object id.
     var query = new Parse.Query(Parse.User);
     var name = "";
     query.equalTo("objectId", userID);
@@ -279,6 +309,11 @@ var pushToList = function (results){
 }
 
 var saveMessageToParse = function(messageText, conversationID, receiverID){
+  // When a message is sent by a user, each individual message is saved to the server.
+  // Each message has associated text, is associated with a conversation id, and records 
+  // of the message.
+  // Permissions are also set so that only the sender and receiver of each object
+  // will be able to read or write a message within a each conversation.
   var currentUser = Parse.User.current();
   var promise = new Parse.Promise();
   var Message = Parse.Object.extend("Messages");
@@ -286,36 +321,33 @@ var saveMessageToParse = function(messageText, conversationID, receiverID){
 
   message.set("ConversationID", conversationID);
   message.set("Sender", currentUser);
-  //message.set("Receiver", receiverID);
+ message.set("Message", messageText);
 
- // message.set("Receiver", receiverID);
+ var myACL = new Parse.ACL();
+ myACL.setWriteAccess(currentUser, true);
+ myACL.setWriteAccess(receiverID, true);
+ myACL.setReadAccess(currentUser, true);
+ myACL.setReadAccess(receiverID, true);  
+ message.setACL(myACL);
 
-  message.set("Message", messageText);
+ message.save(null,{
+  success: (function(results) {
+    promise.resolve(results.toJSON());
 
-  var myACL = new Parse.ACL();
-  myACL.setWriteAccess(currentUser, true);
-  myACL.setWriteAccess(receiverID, true);
-  myACL.setReadAccess(currentUser, true);
-  myACL.setReadAccess(receiverID, true);  
-  message.setACL(myACL);
-
-  message.save(null,{
-    success: (function(results) {
-      promise.resolve(results.toJSON());
-      //console.log(results);
-     // console.log(results.toJSON());
-    }),
-    error: (function(error) {
-      console.log(error);
+   }),
+  error: (function(error) {
+    console.log(error);
     // error is a Parse.Error with an error code and message.
   })
-  })
+})
   //console.log(message.toJSON());
   return promise;
   
 }
 
 var getMessages = function(conversationID){
+  // Gets a list of messages objects for a conversation and sorts is in the order it was created with
+  // the oldest messages listed first.
   var query = new Parse.Query("Messages");
   var name = "";
   query.equalTo("ConversationID", conversationID);
@@ -340,6 +372,9 @@ var getMessages = function(conversationID){
 }
 
 var getAllPostsByTitle = function(search, tableName){
+  // gets all postings that start with the given title or course code.
+  // Utilized by the search system.
+  // Does not return a post if the it belongs to the current user.
   var queryTitle = new Parse.Query(tableName);
   queryTitle.matches("title", "("+search+")", "i");
   var queryCode = new Parse.Query(tableName);
@@ -370,6 +405,8 @@ var getAllPostsByTitle = function(search, tableName){
 
 var setVisibilityById = function(tableName,ID,visibility){
   // Create a pointer to an object of class tableName with id ID
+  // Changes the visibility of a posting object if a user decides to publish
+  // or unpublish a saved post.
   var Posting = Parse.Object.extend(tableName);
   var posting = new Posting();
   posting.id = ID;
@@ -402,26 +439,27 @@ var setVisibilityById = function(tableName,ID,visibility){
 }
 
 var updateMessages = function(conversationID, lastUpdated, otherUserID){
- // console.log(lastUpdated);
-  var query = new Parse.Query("Messages");
-  query.equalTo("ConversationID", conversationID);
-  query.notEqualTo("Sender", Parse.User.current());
-  //console.log(Parse.User.current());
+  // Updates messages that were sent to this user in this conversation thread.
+  // The function only gets messages that are sent after the conversation was
+  // last updated.
+ var query = new Parse.Query("Messages");
+ query.equalTo("ConversationID", conversationID);
+ query.notEqualTo("Sender", Parse.User.current());
   query.ascending("createdAt");
   //set up a promise to return
   var promise = new Parse.Promise();
   var updatedHistory =[];
   query.greaterThan("createdAt",lastUpdated)
   query.find().then(function(results) {
+    console.log(results.length);
+    console.log("Lastupdated: "+lastUpdated);
 
     for (var i = 0; i < results.length; i++) {
       var object = results[i].toJSON();
       updatedHistory.push(object);
-     
-     // console.log(messages);
+      console.log(object.createdAt);
    }
    promise.resolve(updatedHistory);
-    //  console.log(conversations[0].user1.objectId);
   },function(error){
       //fires the error part in the .then() in the code calling this function
       promise.reject("Error: " + error.message);
@@ -430,6 +468,10 @@ var updateMessages = function(conversationID, lastUpdated, otherUserID){
 }
 
 var createConversation = function(otherUser){
+  // When you choose to send a message to a user you have never messaged before,
+  // it creates a conversation thread object.
+  // This is used to store who is involved in a conversation, as well as the name 
+  // of the other user to display.
   var currentUser = Parse.User.current();
   var promise = new Parse.Promise();
   var Conversation = Parse.Object.extend("Conversations");
@@ -450,28 +492,25 @@ var createConversation = function(otherUser){
   conversation.save(null,{
     success: (function(results) {
       promise.resolve(results.toJSON());
-      //console.log(results);
-     // console.log(results.toJSON());
-    }),
+    
+   }),
     error: (function(error) {
       alert(error);
     // error is a Parse.Error with an error code and message.
   })
   })
-  //console.log(message.toJSON());
   return promise;
-
-
 }
 
 function validateUser(user){
+  // Ensures the user data inputted for signup is valid with respect to characters used and length.
   var ck_firstName = /^[A-Za-z0-9 ]{2,20}$/;
   var ck_lastName = /^[A-Za-z0-9 ]{2,30}$/;
   var ck_email = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i 
   var ck_username = /^[A-Za-z0-9_]{1,20}$/;
   var ck_password =  /^[A-Za-z0-9!@#$%^&*()_]{6,20}$/;
   var errors = [];
-   
+
   if (!ck_firstName.test(user.firstName)) {
     errors[errors.length] = "Invalid First Name.";
   }
@@ -483,17 +522,19 @@ function validateUser(user){
   }
   if (!ck_username.test(user.username)) {
     errors[errors.length] = "Invalid username.";
-   }
-   if (!ck_password.test(user.password)) {
+  }
+  if (!ck_password.test(user.password)) {
     errors[errors.length] = "Password must be at least 6 characters.";
-   }
-   if (errors.length > 0) {
+  }
+  if (errors.length > 0) {
     return reportErrors(errors);
-   }
-    return true;
+  }
+  return true;
 }
 
 var validatePost = function(post){
+    // Ensures the post data inputted for signup is valid with respect to characters used, length, and format.
+
   var ck_courseCode = /^[A-Za-z]{2}[1-4]{1}[0-9]{2}$/;
   
   var errors = [];
@@ -509,22 +550,24 @@ var validatePost = function(post){
   if (post.edition.length ==0||isNaN(post.edition)||post.edition <=0||post.edition >99) {
     errors[errors.length] = "Invalid edition.";
   }
-   
+
   if (errors.length > 0) {
     return reportErrors(errors);
   }
-    return true;
+  return true;
 }
 
 function reportErrors(errors){
+// creates a friendly message that shows the error messages.
  var msg = "Please Enter Valid Data:\n";
  for (var i = 0; i<errors.length; i++) {
    var numError = i + 1;
-    msg += "\n" + numError + ". " + errors[i];
-  }
-  return(msg);
+   msg += "\n" + numError + ". " + errors[i];
+ }
+ return(msg);
 }
 
 String.prototype.capitalizeFirstLetter = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
+  // capitalizes the first letter.
+  return this.charAt(0).toUpperCase() + this.slice(1);
 }
