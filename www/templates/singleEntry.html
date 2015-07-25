@@ -1,10 +1,10 @@
-<ion-view view-title="View Single Entry">
+<ion-view view-title="View Single Entry" >
   <ion-nav-buttons side="right">
-    <a class="button button-assertive" href = "#/app/singleEdit/{{objectId}}">
+    <a class="button button-clear" href = "#/app/singleEdit/{{objectId}}">
       Edit
     </a>
   </ion-nav-buttons>
-  <ion-content class = "padding">
+  <ion-content class = "padding" >
     <h4 ng-show = !posting.visibility align = "center" class="title">This post is currently visible to only you.</h4>
     <h4 ng-show = posting.visibility align = "center" class="title">This post is publicly visible.</h4>
     <form name = myForm>

@@ -290,7 +290,6 @@ $scope.doSignUp = function() {
 
   .controller('MessagingCtrl', ['$scope', '$stateParams','$state','$window', '$ionicScrollDelegate','$timeout','conversationsService','$interval',function($scope, $stateParams,$state, $window, $ionicScrollDelegate,$timeout, conversationsService,$interval) {
     lastUpdated = new Date();
-   // console.log(lastUpdated); 
    $scope.conversations = conversationsService.getConversation();
    $scope.conversationID = $stateParams.conversationID;
 
@@ -369,23 +368,6 @@ $scope.doSignUp = function() {
             $ionicScrollDelegate.$getByHandle('mainScroll').scrollBottom();
           }, 0);
         };
-
-   /* var stop = $interval(function() {
-     updateMessages($scope.conversationID, lastUpdated, $scope.conversation.userID).then(function(result){
-      lastUpdated = new Date();
-      $scope.History =  $scope.History.concat(result); 
-      $scope.$apply();
-      $scope.scrollToBottom();
-     });            
-   },10000);
-
-$scope.$on("$destroy", function (event) {
-    if ( stop ) {
-        $interval.cancel( stop );
-      }*/
-      /*});*/
-
-
 }])
 
   .controller('NewPostingCtrl', ['$scope','$state','dashboardEntries',function($scope,$state,dashboardEntries) {

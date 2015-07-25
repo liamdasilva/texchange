@@ -15,6 +15,10 @@ $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
 
+$energized: teal;
+
+
+
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
@@ -98,24 +102,14 @@ at the bottom as the textarea resizes */
   margin-left: 15px;
 }
 
-/*.chat-bubble.left:before {
-  background-color: #f4f4f4;
-  left: 15px;
-  -webkit-transform: rotate(45deg) skew(50deg);
-}
-*/
 .chat-bubble.right {
-  background-color: #FF5959;
+  background-color: #004f4f;
   color: #fff;
   float: right;
   margin-right: 15px;
 }
 
-/*.chat-bubble.right:before {
-  background-color: #158ffe;
-  right: 15px;
-  -webkit-transform: rotate(118deg) skew(-5deg);
-}*/
+
 
 input, textarea, .item-input, .item-input-wrapper {
 	width: 100% !important;

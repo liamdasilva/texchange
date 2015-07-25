@@ -26,7 +26,7 @@
     <textarea ng-model="Message.text" value="" placeholder="Send a message" required minlength="1" maxlength="1500" ></textarea>
   </label>
   <div class="footer-btn-wrap">
-    <button class="button button-icon icon ion-android-send footer-btn" type="submit"
+    <button class="button button-icon ion-android-send footer-btn" type="submit"
     ng-disabled="!Message.text || Message.text === ''" ng-click="sendMessage()">
   </button>
 </div>

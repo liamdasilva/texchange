@@ -299,7 +299,7 @@ var saveMessageToParse = function(messageText, conversationID, receiverID){
     success: (function(results) {
       promise.resolve(results.toJSON());
       //console.log(results);
-      console.log(results.toJSON());
+     // console.log(results.toJSON());
     }),
     error: (function(error) {
       alert(error);
@@ -344,7 +344,8 @@ var getAllPostsByTitle = function(search, tableName){
   mainQuery.include("author");
   var promise = new Parse.Promise();
   var postings = [];
-
+  var user = Parse.User.current();
+  mainQuery.notEqualTo("author", user);
   mainQuery.find().then(function(results) {
     for (var i = 0; i < results.length; i++) {
       var object = results[i].toJSON();
