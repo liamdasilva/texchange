@@ -2,6 +2,8 @@ angular.module('app.controllers')
 
 //handles the messaing subsystem
 .controller('MessagingCtrl', ['$scope', '$stateParams','$state','$window', '$ionicScrollDelegate','$timeout','conversationsService','$interval',function($scope, $stateParams,$state, $window, $ionicScrollDelegate,$timeout, conversationsService,$interval) {
+  var currentUser = Parse.User.current();
+  if (!currentUser) { $state.go('app');}
   lastUpdated = new Date(); // sets lastUpdated to now
   // the conversation will update as soon as the messaging view is activated.
   $scope.conversations = conversationsService.getConversation(); // gets the conversations from the conversations service.
@@ -45,6 +47,8 @@ angular.module('app.controllers')
   }
 
   $scope.Message = ""; // initialize the message object, set to null.
+  $scope.Messaging = Parse.User.current().id; // initialize the message object, set to null.
+
   $scope.Message.text = ""; // set the text to empty string
   getMessages($scope.conversationID).then(function(result){
     // get all messages associated with this conversation id and that will be used
@@ -74,6 +78,7 @@ angular.module('app.controllers')
       lastUpdated = new Date();
       //Adds all the new messages to our history list.
       $scope.History =  $scope.History.concat(result); 
+      $scope.$broadcast('scroll.refreshComplete');
       // apply the changes to the view and go to the bottom.
       $scope.$apply();
       $scope.scrollToBottom();

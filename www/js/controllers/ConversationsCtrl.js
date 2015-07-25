@@ -1,6 +1,7 @@
 angular.module('app.controllers')
 //manages the conversations page, getting all conversations upon loading the page
 .controller('ConversationsCtrl', ['$scope','conversationsService',function($scope, conversationsService) {
+
   $scope.conversations = {};
   //get conversations of user
   getConversations().then(function(result){
