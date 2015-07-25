@@ -1,7 +1,8 @@
 angular.module('app.controllers')
-
+//controls the new posting page
 .controller('NewPostingCtrl', ['$scope','$state','$ionicPopup','dashboardEntries',function($scope,$state,$ionicPopup,dashboardEntries) {
-  $scope.showAlert = function(title,content) {
+  //creates the message popup function to be used later
+  scope.showAlert = function(title,content) {
     var alertPopup = $ionicPopup.alert({
       title: title,
       template: content,
@@ -18,8 +19,8 @@ angular.module('app.controllers')
   $scope.posting.title = "";
   $scope.posting.condition = "Good";
   $scope.mode = dashboardEntries.getTableName();
-  //console.log($scope.mode);
 
+  //validate and save the new post for later
   $scope.save = function(){
     var validation = validatePost($scope.posting);
     if (validation == true){
@@ -34,6 +35,7 @@ angular.module('app.controllers')
       $scope.showAlert("Error", validation);
     }
   }
+  //validate and post the new post to the public
   $scope.post = function(){
     //save buy posting with visibility as true
     var validation = validatePost($scope.posting);
@@ -49,6 +51,8 @@ angular.module('app.controllers')
       $scope.showAlert("Error", validation);
     }
   }
+  //used by post and save to carry out common tasks
+  //updates the dashboardEntries service so the dashboard is updated, and clears the fields
   var afterSave = function(object){
     //update the dashboard list of sell posts
     if ($scope.mode == "Buyer"){

@@ -1,9 +1,11 @@
 angular.module('app.controllers')
-
+//controls the edit entry page
 .controller('EditEntryCtrl', ['$scope', '$ionicHistory','$ionicPopup','$stateParams','$state','dashboardEntries',function($scope, $ionicHistory,$ionicPopup,$stateParams,$state,dashboardEntries) {
+  //go back to the dashboard if the page mode hasn't been initialized
   if (dashboardEntries.getIndex() == -1){
     $state.go('app.dashboard');
   }
+  //create message popup function to use later
   $scope.showAlert = function(title,content) {
     var alertPopup = $ionicPopup.alert({
       title: title,
@@ -30,6 +32,7 @@ angular.module('app.controllers')
   $scope.form.edition = $scope.posting.edition;
   $scope.form.price = $scope.posting.price;
 
+  //validate and save a change the user has made
   $scope.save = function(){
     if ($scope.mode == "Seller"){$scope.posting.condition = $scope.form.condition;}
     var validation = validatePost($scope.form);
@@ -52,6 +55,7 @@ angular.module('app.controllers')
       $scope.showAlert("Error",validation);
     }
   }
+  //delete the post and go back to the dasboard
   $scope.delete = function(){
     deletePostingById($scope.mode,$stateParams.objectId).then(function(result){
       $scope.showAlert("Success", result);
@@ -69,6 +73,7 @@ angular.module('app.controllers')
       $scope.showAlert("Error", error);
     });
   }
+  //toggle whether the post is visible to the public or not
   $scope.togglePublish = function(){
     if ($scope.mode == "Buyer"){
       setVisibilityById($scope.mode,$stateParams.objectId,!dashboardEntries.getBuying()[i].visibility).then(function(result){

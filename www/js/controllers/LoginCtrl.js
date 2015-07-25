@@ -1,16 +1,20 @@
 angular.module('app.controllers')
-
+//responsible for controlling sign up and sign in
 .controller('LoginCtrl', ['$scope', '$ionicModal','dashboardEntries', '$ionicHistory','$ionicPopup', '$state', function($scope, $ionicModal,dashboardEntries, $ionicHistory,$ionicPopup,$state) {
   $scope.$on('$ionicView.enter', function(e) {
+    //bypass the login page if the user is logged in
     if(Parse.User.current()){
       $ionicHistory.nextViewOptions({
         disableBack: true
       });
       $state.go('app.dashboard');
     }
+    //remove cache and history if a previous user was signed in.
     $ionicHistory.clearCache();
     $ionicHistory.clearHistory();
   });
+
+  //shows an ionic popup given a title and message content, and logs the content to the console
   $scope.showAlert = function(title,content) {
     var alertPopup = $ionicPopup.alert({
       title: title,
@@ -21,12 +25,13 @@ angular.module('app.controllers')
       console.log(content);
     });
   };
+
   // Form data for the login view
   $scope.loginData = {};
   $scope.loginData.username="";
   $scope.loginData.password="";
 
-  // Form data for the singup modal
+  // Form data for the signup modal
   $scope.signUpData = {};
   $scope.signUpData.username="";
   $scope.signUpData.email="";
@@ -34,32 +39,24 @@ angular.module('app.controllers')
   $scope.signUpData.lastName="";
   $scope.signUpData.password="";
   $scope.signUpData.passwordc="";
-  $scope.signUpErrorMessage = "";
-  $scope.signUpError = false;
-  $scope.passMatch = false;
-  $scope.incomplete = true;
-  $scope.signupData = {};
-  $scope.signupData.username="";
-  $scope.signupData.email="";
-  $scope.signupData.firstName="";
-  $scope.signupData.lastName="";
-  $scope.signupData.password="";
-  $scope.signupData.passwordc="";
+  $scope.passMatch = false; //used to disable the signup button if passwords don't match
+  $scope.incomplete = true; //used to disable the signup button if fields are empty
 
-  // Create the login modal that we will use later
+  // Create the signup modal that we will use later
   $ionicModal.fromTemplateUrl('templates/signup.html', {
     scope: $scope
   }).then(function(modal) {
-    $scope.signupModal = modal;
+    $scope.signUpModal = modal;
   });
 
-  // Triggered in the login modal to close it
+  // Triggered in the signup modal to close it
   $scope.closeSignup = function() {
-    $scope.signupModal.hide();
+    $scope.signUpModal.hide();
   };
-  // Open the login modal
+
+  // Opens the signup modal
   $scope.signup = function() {
-    $scope.signupModal.show();
+    $scope.signUpModal.show();
   };
 
   // Perform the login action when the user submits the login form
@@ -67,19 +64,6 @@ angular.module('app.controllers')
     console.log('Doing login');
     Parse.User.logIn($scope.loginData.username, $scope.loginData.password,{
       success: function(user){
-
-        //load the dashboard entries upon login
-        // var user = Parse.User.current();
-        // getPostings("Buyer",user).then(function(result){
-        //   dashboardEntries.setBuying(result);
-        // }, function(error){
-        //   console.log(error);
-        // });
-        // getPostings("Seller",user).then(function(result){
-        //   dashboardEntries.setSelling(result);
-        // }, function(error){
-        //   console.log(error);
-        // });
         $scope.name = user.get("firstName");
         $scope.showAlert("Success","Hello " + $scope.name + ", you are now logged in.");
         $ionicHistory.nextViewOptions({
@@ -93,6 +77,7 @@ angular.module('app.controllers')
     });
   };
 
+  //make sign up button dynamically disable if info is invalid
   $scope.$watch('signUpData.username',function() {$scope.test();});
   $scope.$watch('signUpData.email',function() {$scope.test();});
   $scope.$watch('signUpData.firstName', function() {$scope.test();});
@@ -100,6 +85,7 @@ angular.module('app.controllers')
   $scope.$watch('signUpData.password', function() {$scope.test();});
   $scope.$watch('signUpData.passwordc', function() {$scope.test();});
 
+  //make sign up button dynamically disable if info is invalid
   $scope.test = function() {
     if ($scope.signUpData.password !== $scope.signUpData.passwordc) {
       $scope.passMatch = false;
@@ -115,11 +101,14 @@ angular.module('app.controllers')
         $scope.incomplete = true;
     }
   };
-
+  //Perform the signup action when the user submits the signup form
   $scope.doSignUp = function() {
     var validation = validateUser($scope.signUpData)
     if (validation == true){
       console.log('Doing signup');
+      $scope.signUpData.firstName=$scope.signUpData.firstName.capitalizeFirstLetter();
+      $scope.signUpData.lastName=$scope.signUpData.lastName.capitalizeFirstLetter();
+      $scope.signUpData.username = $scope.signUpData.username.toLowerCase();
       signUpNewUser($scope.signUpData).then(
       function(result){
         $scope.showAlert("Success", "You have signed up successfully!");
@@ -130,13 +119,9 @@ angular.module('app.controllers')
         $scope.signUpData.lastName="";
         $scope.signUpData.password="";
         $scope.signUpData.passwordc="";
-        $scope.signUpErrorMessage = "";
-        $scope.signUpError = false;
-        $scope.passMatch = true;
-        $scope.incomplete = true;
+        
       },function(error){
-        $scope.signUpErrorMessage = error;
-        $scope.signUpError = true;
+        $scope.showAlert("Error",error);
       });
     }else{
       $scope.showAlert("Error",validation);

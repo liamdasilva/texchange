@@ -1,18 +1,15 @@
 angular.module('app.controllers')
-
+//controls the search page
 .controller('SearchCtrl', ['$scope','$window','viewPosting',function($scope,$window,viewPosting) {
- // var user = Parse.User.current();
- $scope.search = {};
- $scope.search.option = "Buying";
- // console.log($scope.search.option);
-  //console.log($scope.search.text);
+  // var user = Parse.User.current();
+  $scope.search = {};
+  $scope.search.option = "Buying";
+
+  //gets the search results when the user clicks search
   $scope.getSearchResults = function(){
-    console.log($scope.search.text);
-    console.log($scope.search.option);
     if ($scope.search.option == "Buying"){
       getAllPostsByTitle($scope.search.text, "Buyer").then(function(result){
         $scope.results  = result;
-        $scope.noResults = $scope.results.length == 0;
         $scope.$apply();
 
       }, function (error){
@@ -22,8 +19,6 @@ angular.module('app.controllers')
     else if ($scope.search.option == "Selling"){
       getAllPostsByTitle($scope.search.text, "Seller").then(function(result){
         $scope.results  = result;
-      // console.log($scope.results.length);
-        $scope.noResults = $scope.results.length == 0;
         $scope.$apply();
 
         console.log($scope.results);
