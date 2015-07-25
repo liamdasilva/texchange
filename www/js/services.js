@@ -7,6 +7,15 @@ angular.module('app.services', [])
     getConversations: function () {
       return conversationsHistory;
     },
+    addConversation: function (inName, inUserID, inConversationID) {
+      var newConversationObject = {
+          updatedAt: null,
+          name: inName,
+          userID: inUserID,
+          id: inConversationID
+        };
+      conversationsHistory.push(newConversationObject);
+    },
     setConversations: function (conversations) {
       conversationsHistory = conversations;
     },
@@ -14,6 +23,13 @@ angular.module('app.services', [])
       result = null;
       conversationsHistory.forEach(function(conversation) {
         if (conversation.id === ID) result = conversation;
+      })
+      return result
+    },
+    getConversationID: function(userID) {
+      result = null;
+      conversationsHistory.forEach(function(conversation) {
+        if (conversation.userID === userID) result = conversation;
       })
       return result
     }

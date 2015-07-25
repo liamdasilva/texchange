@@ -21,6 +21,7 @@
 }])
   
   .controller('LoginCtrl', ['$scope', '$ionicModal','dashboardEntries', '$ionicHistory', '$state', function($scope, $ionicModal,dashboardEntries, $ionicHistory,$state) {
+
     $scope.$on('$ionicView.enter', function(e) {
       if(Parse.User.current()){
         $ionicHistory.nextViewOptions({
@@ -185,7 +186,7 @@ $scope.doSignUp = function() {
     }
   }])
 
-  .controller('SearchCtrl', ['$scope','$window','viewPosting',function($scope,$window,viewPosting) {
+  .controller('SearchCtrl', ['$scope','$window','viewPosting',function($scope,$window, viewPosting) {
    // var user = Parse.User.current();
    $scope.search = {};
    $scope.search.option = "Buying";
@@ -208,13 +209,13 @@ $scope.doSignUp = function() {
         getAllPostsByTitle($scope.search.text, "Seller").then(function(result){
           $scope.results  = result;
         // console.log($scope.results.length);
-          $scope.noResults = $scope.results.length == 0;
-          $scope.$apply();
+        $scope.noResults = $scope.results.length == 0;
+        $scope.$apply();
 
-          console.log($scope.results);
-        }, function (error){
-          alert (error);
-        });
+        console.log($scope.results);
+      }, function (error){
+        alert (error);
+      });
       }
     }
 
@@ -290,55 +291,56 @@ $scope.doSignUp = function() {
 
   .controller('MessagingCtrl', ['$scope', '$stateParams','$state','$window', '$ionicScrollDelegate','$timeout','conversationsService','$interval',function($scope, $stateParams,$state, $window, $ionicScrollDelegate,$timeout, conversationsService,$interval) {
     lastUpdated = new Date();
-   $scope.conversations = conversationsService.getConversation();
-   $scope.conversationID = $stateParams.conversationID;
+    $scope.conversations = conversationsService.getConversation();
+    $scope.conversationID = $stateParams.conversationID;
 
-   if (conversationsService.getConversations().length == 0){
-    getConversations().then(function(result){
-     $scope.conversations = getOtherConversationUser(result);
-     conversationsService.setConversations($scope.conversations);
-     $scope.conversations = conversationsService.getConversation($scope.conversationID);
-     console.log($scope.conversations);
-     $scope.$apply();
+    if (conversationsService.getConversations().length == 0){
+      getConversations().then(function(result){
+       $scope.conversations = getOtherConversationUser(result);
+       conversationsService.setConversations($scope.conversations);
+       $scope.conversations = conversationsService.getConversation($scope.conversationID);
+       console.log($scope.conversations);
+       $scope.$apply();
 
-   }, function(error){
-    alert(error);
-  });
-  }else{
-    $scope.conversations = conversationsService.getConversation($scope.conversationID);
-  }
-
-  $scope.History = [];
-  $scope.sendMessage = function(){
-    if ($scope.Message.text.trim() != ""){
-      saveMessageToParse($scope.Message.text, $scope.conversationID, $scope.conversations.userID).then(function(result){
-        lastUpdated = new Date();
-        $scope.History.push(result);
-        $scope.$apply();
-        $scope.scrollToBottom();
-
-      }, function(error){
-        alert(error);
-      });
+     }, function(error){
+      alert(error);
+    });
+    }else{
+      $scope.conversations = conversationsService.getConversation($scope.conversationID);
     }
-    $scope.Message.text = "";
-  }
-  $scope.Messaging = Parse.User.current().id;
-  $scope.Message = "";
-  $scope.Message.text = "";
-  var user = Parse.User.current();
-  getMessages($scope.conversationID).then(function(result){
-    $scope.History = result;
-    $scope.noHistory = $scope.History.length == 0;
-    $scope.scrollToBottom();
-    lastUpdated = new Date();
-    $scope.update();
 
-  }, function(error){
-   alert(error);
- });
-  var stop;
-  $scope.update = function() {
+    $scope.History = [];
+    $scope.sendMessage = function(){
+      if ($scope.Message.text.trim() != ""){
+        saveMessageToParse($scope.Message.text, $scope.conversationID, $scope.conversations.userID).then(function(result){
+          lastUpdated = new Date();
+          $scope.History.push(result);
+          $scope.$apply();
+          $scope.scrollToBottom();
+
+        }, function(error){
+          alert(error);
+        });
+      }
+      $scope.Message.text = "";
+    }
+
+    $scope.Messaging = Parse.User.current().id;
+    $scope.Message = "";
+    $scope.Message.text = "";
+    var user = Parse.User.current();
+    getMessages($scope.conversationID).then(function(result){
+      $scope.History = result;
+      $scope.noHistory = $scope.History.length == 0;
+      $scope.scrollToBottom();
+      lastUpdated = new Date();
+      $scope.update();
+
+    }, function(error){
+     alert(error);
+   });
+    var stop;
+    $scope.update = function() {
           // Don't start updating if we are already updating
           if ( angular.isDefined(stop) ) return;
           stop = $interval(function() {
@@ -368,7 +370,7 @@ $scope.doSignUp = function() {
             $ionicScrollDelegate.$getByHandle('mainScroll').scrollBottom();
           }, 0);
         };
-}])
+      }])
 
   .controller('NewPostingCtrl', ['$scope','$state','dashboardEntries',function($scope,$state,dashboardEntries) {
     $scope.posting = {};
@@ -524,7 +526,24 @@ $scope.doSignUp = function() {
   }
 }])
 
-.controller('ViewPostingsCtrl', ['$scope','$ionicLoading', '$stateParams','$state','viewPosting',function($scope,$ionicLoading, $stateParams,$state,viewPosting) {
+  .controller('ViewPostingsCtrl', ['$scope','$ionicLoading', '$stateParams','$state','viewPosting','conversationsService',function($scope,$ionicLoading, $stateParams,$state,viewPosting,conversationsService) {
+   $scope.conversations = [];
+   if (conversationsService.getConversations().length ==0){
+    console.log("here");
+    getConversations().then(function(result){
+     $scope.conversations = getOtherConversationUser(result);
+     conversationsService.setConversations($scope.conversations);
+     noConversations = $scope.conversations.length == 0;
+     $scope.$apply();
+     console.log($scope.conversations);
+   }, function(error){
+    alert(error);
+  });
+  } else{
+    $scope.conversations = conversationsService.getConversation();
+      console.log($scope.conversations);
+  }
+
   $ionicLoading.show({
     content: 'Loading',
     animation: 'fade-in',
@@ -537,13 +556,12 @@ $scope.doSignUp = function() {
   $scope.author = $scope.posting.author;
   $scope.mode = viewPosting.getTableName();
   $scope.entries = {};
-  
   getPostings("Buyer",$scope.posting.parseAuthor).then(function(result){
     $scope.entries.buying = result;
     $scope.entries.buying = $scope.entries.buying.filter(function(el){
       return el.objectId != $scope.pageId;
     });
-    
+
   }, function(error){
     console.log(error);
   });
@@ -557,11 +575,32 @@ $scope.doSignUp = function() {
     console.log(error);
   });
 
-  $scope.refresh = function(){
-    $scope.entries = {};
-    $scope.entries.buying = dashboardEntries.getBuying();
-    $scope.entries.selling = dashboardEntries.getSelling();
-    $scope.$broadcast("scroll.refreshComplete");
-  }
-  
+  $scope.startConversation = function(){
+    //console.log($scope.author);
+    var conversationID = conversationsService.getConversationID($scope.author.objectId);
+   // console.log(conversationID.id);
+    if (conversationID == null){
+      createConversation($scope.posting.parseAuthor).then(function(result){
+        conversationID = result;
+        name = $scope.author.firstName +" "+ $scope.author.lastName;
+        userID=  $scope.author.objectId;
+        id = result.objectId;
+        conversationsService.addConversation(name, userID, id);
+       // console.log(conversationID);
+        $state.go('app.messaging', {conversationID: conversationID.objectId });
+      })
+    }
+    else{  
+      console.log(conversationID);
+      $state.go('app.messaging', {conversationID: conversationID.id} );
+  };
+}
+
+$scope.refresh = function(){
+  $scope.entries = {};
+  $scope.entries.buying = dashboardEntries.getBuying();
+  $scope.entries.selling = dashboardEntries.getSelling();
+  $scope.$broadcast("scroll.refreshComplete");
+}
+
 }]);

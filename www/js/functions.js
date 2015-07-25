@@ -281,19 +281,25 @@ var pushToList = function (results){
 }
 
 var saveMessageToParse = function(messageText, conversationID, receiverID){
-  var currentUserID = Parse.User.current().id;
+  var currentUser = Parse.User.current();
   var promise = new Parse.Promise();
   var Message = Parse.Object.extend("Messages");
   var message = new Message();
 
   message.set("ConversationID", conversationID);
-  message.set("Sender", Parse.User.current());
+  message.set("Sender", currentUser);
+  //message.set("Receiver", receiverID);
+
+ // message.set("Receiver", receiverID);
+
   message.set("Message", messageText);
-  var myACL = new Parse.ACL(Parse.User.current());
-  myACL.setWriteAccess(currentUserID, true);
+
+  var myACL = new Parse.ACL();
+  myACL.setWriteAccess(currentUser, true);
   myACL.setWriteAccess(receiverID, true);
-  myACL.setPublicReadAccess(true);
-  //console.log(message);
+  myACL.setReadAccess(currentUser, true);
+  myACL.setReadAccess(receiverID, true);  
+  message.setACL(myACL);
 
   message.save(null,{
     success: (function(results) {
@@ -302,7 +308,7 @@ var saveMessageToParse = function(messageText, conversationID, receiverID){
      // console.log(results.toJSON());
     }),
     error: (function(error) {
-      alert(error);
+      console.log(error);
     // error is a Parse.Error with an error code and message.
   })
   })
@@ -398,7 +404,7 @@ var setVisibilityById = function(tableName,ID,visibility){
 }
 
 var updateMessages = function(conversationID, lastUpdated, otherUserID){
-  console.log(lastUpdated);
+ // console.log(lastUpdated);
   var query = new Parse.Query("Messages");
   query.equalTo("ConversationID", conversationID);
   query.notEqualTo("Sender", Parse.User.current());
@@ -423,4 +429,39 @@ var updateMessages = function(conversationID, lastUpdated, otherUserID){
       promise.reject("Error: " + error.message);
     });
   return promise;
+}
+
+var createConversation = function(otherUser){
+  var currentUser = Parse.User.current();
+  var promise = new Parse.Promise();
+  var Conversation = Parse.Object.extend("Conversations");
+  var conversation = new Conversation();
+
+  conversation.set("user1", currentUser);
+  conversation.set("user2", otherUser);
+  conversation.set("visibleToUser1", true);
+  conversation.set("visibleToUser2", true);
+
+  var myACL = new Parse.ACL();
+  myACL.setWriteAccess(currentUser, true);
+  myACL.setWriteAccess(otherUser, true);
+  myACL.setReadAccess(currentUser, true);
+  myACL.setReadAccess(otherUser, true);  
+  conversation.setACL(myACL);
+
+  conversation.save(null,{
+    success: (function(results) {
+      promise.resolve(results.toJSON());
+      //console.log(results);
+     // console.log(results.toJSON());
+    }),
+    error: (function(error) {
+      alert(error);
+    // error is a Parse.Error with an error code and message.
+  })
+  })
+  //console.log(message.toJSON());
+  return promise;
+
+
 }
