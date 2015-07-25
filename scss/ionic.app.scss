@@ -87,6 +87,15 @@ at the bottom as the textarea resizes */
   max-width: 80%;
 }
 
+.chat-bubble:before {
+  content: "\00a0";
+  display: block;
+  height: 16px;
+  width: 9px;
+  position: absolute;
+  bottom: -7.5px;
+}
+
 
 .chat-bubble.left {
   background-color: #f4f4f4;
@@ -96,12 +105,10 @@ at the bottom as the textarea resizes */
 
 .chat-bubble.right {
   background-color: #004f4f;
-  color: #fff;
+  color:#fff;
   float: right;
-  margin-right: 15px;
+  margin-left: 15px;
 }
-
-
 
 input, textarea, .item-input, .item-input-wrapper {
 	width: 100% !important;

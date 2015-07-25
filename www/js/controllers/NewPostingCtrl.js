@@ -2,7 +2,7 @@ angular.module('app.controllers')
 //controls the new posting page
 .controller('NewPostingCtrl', ['$scope','$state','$ionicPopup','dashboardEntries',function($scope,$state,$ionicPopup,dashboardEntries) {
   //creates the message popup function to be used later
-  scope.showAlert = function(title,content) {
+  $scope.showAlert = function(title,content) {
     var alertPopup = $ionicPopup.alert({
       title: title,
       template: content,
