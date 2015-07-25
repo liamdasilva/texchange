@@ -1,12 +1,9 @@
 <ion-view view-title="Conversations">
   <ion-content>
-<<<<<<< HEAD
   	<ion-refresher
 	    pulling-text="Pull to refresh..."
 	    on-refresh="refresh()">
   	</ion-refresher>
-=======
->>>>>>> 0d7dbd9bf5dadf61e12b8b89c65ca5faac5c8801
     <ion-list>
 	    <ion-item ng-repeat="conversation in conversations | orderBy:-'name'" href="#/app/conversations/{{conversation.id}}">
 	    	{{conversation.name}}
