@@ -542,6 +542,7 @@ $scope.$on("$destroy", function (event) {
   }
 }])
 
+<<<<<<< HEAD
 .controller('ViewPostingsCtrl', ['$scope','$ionicLoading', '$stateParams','$state','viewPosting',function($scope,$ionicLoading, $stateParams,$state,viewPosting) {
   $ionicLoading.show({
     content: 'Loading',
