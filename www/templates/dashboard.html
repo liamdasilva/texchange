@@ -1,5 +1,5 @@
 <ion-view view-title="Dashboard">
-  	<ion-content class = "padding">
+  	<ion-content class = "padding has-footer">
 	<ion-refresher
 	    pulling-text="Pull to refresh..."
 	    on-refresh="refresh()">
@@ -8,7 +8,7 @@
     	<ion-item class = "item-divider item-energized">
       		You're Buying
   	  	</ion-item>
-	    <ion-item ng-repeat="buyPost in entries.buying" ng-click="setMode('Buyer',$index)" href="#/app/single/{{buyPost.objectId}}">
+	    <ion-item ng-repeat="buyPost in entries.buying" ng-class="{'notVisible': !buyPost.visibility}" ng-click="setMode('Buyer',$index)" href="#/app/single/{{buyPost.objectId}}">
 	    	{{buyPost.courseCode}}
 	        - {{buyPost.title}}
 	    </ion-item>
@@ -18,7 +18,7 @@
 	    <ion-item class = "item-divider item-energized">
 	    	You're Selling
 	  	</ion-item>
-	  	<ion-item ng-repeat="sellPost in entries.selling" ng-click="setMode('Seller',$index)" href="#/app/single/{{sellPost.objectId}}">
+	  	<ion-item ng-repeat="sellPost in entries.selling" ng-class="{'notVisible': !sellPost.visibility}" ng-click="setMode('Seller',$index)" href="#/app/single/{{sellPost.objectId}}">
 	    	{{sellPost.courseCode}}
 	        - {{sellPost.title}}
 	    </ion-item>
@@ -29,10 +29,10 @@
     
   	</ion-content>
   	<div class = "bar bar-footer bar-energized">
-		<div class = "button-bar button-bar-clear">
-		    <a class= "button  button-clear icon-left ion-android-chat" href="#/app/conversations">Conversations</a>
-		    <a class= "button  button-clear icon-left ion-plus-round" ng-click="setMode('Buyer',0)" href="#/app/newPosting">Buy</a>
-		    <a class= "button button-clear ion-plus-round icon-left" ng-click="setMode('Seller',0)" href = "#/app/newPosting">Sell</a>
+		<div class = "button-bar button-bar">
+		    <a class= "button  button-energized icon ion-android-chat bold" href="#/app/conversations"><b></b></a>
+		    <a class= "button  button-energized icon-left ion-plus-round" ng-click="setMode('Buyer',0)" href="#/app/newPosting"><b>Buy</b></a>
+		    <a class= "button button-energized ion-plus-round icon-left" ng-click="setMode('Seller',0)" href = "#/app/newPosting"><b>Sell</b></a>
 		</div>
 	</div>
 </ion-view>

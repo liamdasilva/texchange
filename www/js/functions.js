@@ -105,8 +105,6 @@ var updatePostingById = function(tableName,ID,postData){
   var Posting = Parse.Object.extend(tableName);
   var posting = new Posting();
   posting.id = ID;
-
-  // Set a new value on quantity
   posting.set("courseCode", postData.courseCode);
   posting.set("title", postData.title);
   posting.set("price", Number(postData.price));
@@ -423,4 +421,68 @@ var updateMessages = function(conversationID, lastUpdated, otherUserID){
       promise.reject("Error: " + error.message);
     });
   return promise;
+}
+function validateUser(user){
+  var ck_firstName = /^[A-Za-z0-9 ]{2,20}$/;
+  var ck_lastName = /^[A-Za-z0-9 ]{2,30}$/;
+  var ck_email = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i 
+  var ck_username = /^[A-Za-z0-9_]{1,20}$/;
+  var ck_password =  /^[A-Za-z0-9!@#$%^&*()_]{6,20}$/;
+  var errors = [];
+   
+  if (!ck_firstName.test(user.firstName)) {
+    errors[errors.length] = "Invalid First Name.";
+  }
+  if (!ck_lastName.test(user.lastName)) {
+    errors[errors.length] = "Invalid Last Name.";
+  }
+  if (!ck_email.test(user.email)) {
+    errors[errors.length] = "Invalid email address.";
+  }
+  if (!ck_username.test(user.username)) {
+    errors[errors.length] = "Invalid username.";
+   }
+   if (!ck_password.test(user.password)) {
+    errors[errors.length] = "Password must be at least 6 characters.";
+   }
+   if (errors.length > 0) {
+    return reportErrors(errors);
+   }
+    return true;
+}
+
+var validatePost = function(post){
+  var ck_courseCode = /^[A-Za-z]{2}[1-4]{1}[0-9]{2}$/;
+  
+  var errors = [];
+  if (!ck_courseCode.test(post.courseCode)) {
+    errors[errors.length] = "Invalid course code.";
+  }
+  if (post.title.length <4) {
+    errors[errors.length] = "Invalid title.";
+  }
+  if (post.price.length ==0 || isNaN(post.price)) {
+    errors[errors.length] = "Invalid price.";
+  }
+  if (post.edition.length ==0||isNaN(post.edition)||post.edition <=0||post.edition >99) {
+    errors[errors.length] = "Invalid edition.";
+  }
+   
+  if (errors.length > 0) {
+    return reportErrors(errors);
+  }
+    return true;
+}
+
+function reportErrors(errors){
+ var msg = "Please Enter Valid Data:\n";
+ for (var i = 0; i<errors.length; i++) {
+   var numError = i + 1;
+    msg += "\n" + numError + ". " + errors[i];
+  }
+  return(msg);
+}
+
+String.prototype.capitalizeFirstLetter = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
 }

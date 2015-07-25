@@ -18,7 +18,6 @@ $dark:                            #444 !default;
 $energized: teal;
 
 
-
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
 
@@ -127,9 +126,17 @@ input, textarea, .item-input, .item-input-wrapper {
 .cf {
   clear: both !important;
 }
+.darkTeal{
+  color: #004f4f;
+}
+.bold{
+  decoration: bold;
+}
 
-
-
-
-
-
+.popup-buttons .button{
+  background-color : teal;
+  outline-color: teal;
+}
+.notVisible{
+  font-style: italic;
+}
