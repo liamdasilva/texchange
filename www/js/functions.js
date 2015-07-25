@@ -341,12 +341,16 @@ var getAllPostsByTitle = function(search, tableName){
   var queryCode = new Parse.Query(tableName);
   queryCode.matches("courseCode", "("+search+")", "i");
   var mainQuery = Parse.Query.or(queryCode,queryTitle);
+  mainQuery.include("author");
   var promise = new Parse.Promise();
   var postings = [];
 
   mainQuery.find().then(function(results) {
     for (var i = 0; i < results.length; i++) {
       var object = results[i].toJSON();
+      object.author = results[i].get("author").toJSON();
+      object.parseAuthor = results[i].get("author");
+
       postings.push(object);
      // console.log(messages);
    }
