@@ -2,10 +2,13 @@ angular.module('app.services', [])
 
 .service('conversationsService', function () {
   var user = Parse.User.current();
-  var conversationsHistory = [];
+  var conversationsHistory = {
+    conversations:[],
+    lastMessage: null
+  };
   return {
     getConversations: function () {
-      return conversationsHistory;
+      return conversationsHistory.conversations;
     },
     addConversation: function (inName, inUserID, inConversationID) {
       var newConversationObject = {
@@ -14,7 +17,7 @@ angular.module('app.services', [])
           userID: inUserID,
           id: inConversationID
         };
-      conversationsHistory.push(newConversationObject);
+      conversationsHistory.conversations.push(newConversationObject);
     },
     setConversations: function (conversations) {
       conversationsHistory = conversations;
@@ -28,7 +31,7 @@ angular.module('app.services', [])
     },
     getConversationID: function(userID) {
       result = null;
-      conversationsHistory.forEach(function(conversation) {
+      conversationsHistory.conversations.forEach(function(conversation) {
         if (conversation.userID === userID) result = conversation;
       })
       return result

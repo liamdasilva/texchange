@@ -327,7 +327,7 @@
     $scope.sendMessage = function(){
       if ($scope.Message.text.trim() != ""){
         saveMessageToParse($scope.Message.text, $scope.conversationID, $scope.conversations.userID).then(function(result){
-          lastUpdated = new Date();
+          //lastUpdated = new Date();
           $scope.History.push(result);
           $scope.$apply();
           $scope.scrollToBottom();
