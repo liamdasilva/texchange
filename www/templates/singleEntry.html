@@ -1,12 +1,12 @@
-<ion-view view-title="View Single Entry" >
+<ion-view view-title="{{viewTitle}}" >
   <ion-nav-buttons side="right">
     <a class="button button-clear" href = "#/app/singleEdit/{{objectId}}">
       Edit
     </a>
   </ion-nav-buttons>
   <ion-content class = "padding" >
-    <h4 ng-show = !posting.visibility align = "center" class="title">This post is currently visible to only you.</h4>
-    <h4 ng-show = posting.visibility align = "center" class="title">This post is publicly visible.</h4>
+    <h4 ng-show = !posting.visibility align = "center" class="title notVisible darkTeal">This post is currently visible to only you.</h4>
+    <h4 ng-show = posting.visibility align = "center" class="title darkTeal">This post is publicly visible.</h4>
     <form name = myForm>
       <ion-list ion-list-inset>
         <label class="item item-input">
@@ -14,8 +14,8 @@
           <input disabled = true type="text" name = "courseCode" placeholder = "Course Code" ng-model="posting.courseCode" required>
         </label>
         <label class="item item-input">
-          <span class="input-label">Textbook Name</span>
-          <input disabled = true type="text" name = "title" placeholder = "Textbook Name" ng-model="posting.title" required>
+          <span class="input-label">Title</span>
+          <input disabled = true type="text" name = "title" placeholder = "Title" ng-model="posting.title" required>
         </label>
         <label class="item item-input">
           <span ng-if ="mode == 'Buyer'"class="input-label">Looking Price</span>
@@ -33,8 +33,8 @@
       </ion-list>
     </form>
     <div ng-if ="mode == 'Seller'">
-      <h4 ng-if = "buyers.length!=1">There are {{buyers.length}} buyers:</h4>
-      <h4 ng-if = "buyers.length==1">There is 1 buyer:</h4>
+      <h4 ng-if = "buyers.length!=1" class = "darkTeal">There are {{buyers.length}} buyers:</h4>
+      <h4 ng-if = "buyers.length==1" class = "darkTeal">There is 1 buyer:</h4>
       <ion-list>
         <ion-item ng-repeat="buyer in buyers" ng-click = "sendPost($index)" href="#/app/viewPostings/{{buyer.objectId}}">
           {{buyer.price|currency}} - {{buyer.title}}
@@ -46,8 +46,8 @@
     </div>
 
     <div ng-if ="mode == 'Buyer'">
-      <h4 ng-if = "sellers.length!=1">There are {{sellers.length}} sellers:</h4>
-      <h4 ng-if = "sellers.length==1">There is 1 seller:</h4>
+      <h4 ng-if = "sellers.length!=1" class = "darkTeal">There are {{sellers.length}} sellers:</h4>
+      <h4 ng-if = "sellers.length==1" class = "darkTeal">There is 1 seller:</h4>
       <ion-list>
         <ion-item ng-repeat="seller in sellers">
           {{seller.author.firstName}} {{seller.author.lastName}} -

@@ -1,29 +1,27 @@
 <!-- <ion-modal-view> -->
 <ion-view view-title="Login">
-
-<ion-header-bar class="bar-energized">
-<h1 class="title">Texchange</h1>
-<div class="buttons">
-  <button class="button button-clear"</button>
-    <!-- <button class="button button-clear" ng-click="closeLogin()">Close</button> -->
-  </div>
-</ion-header-bar>
-<ion-content>
-<form novalidate>
-  <ion-list ion-list-inset>
-  <label class="item item-input">
-    <span class="input-label">Username</span>
-    <input type="text" ng-model="loginData.username">
-  </label>
-  <label class="item item-input">
-    <span class="input-label">Password</span>
-    <input type="password" ng-model="loginData.password">
-  </label>
-</ion-list>
-<button class="button button-block button-dark" ng-click="doLogin()">Log in</button>
-<button class="button button-block button-dark" ng-click = "signup()">New here? Sign Up!</button>
-</form>
-
-</ion-content>
+  <ion-header-bar class = "bar-energized">
+    <h1 class="title">Texchange</h1>
+    <div class="buttons">
+      <button class="button button-clear"</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <form novalidate>
+      <ion-list ion-list-inset>
+        <label class="item item-input">
+          <span class="input-label">Username</span>
+          <input type="text" ng-model="loginData.username">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Password</span>
+          <input type="password" ng-model="loginData.password">
+        </label>
+      </ion-list>
+      <button class="button button-block button-dark" ng-click="doLogin()">Log in</button>
+      <button class="button button-block button-dark" ng-click = "signup()">New here? Sign Up!</button>
+    </form>
+    
+  </ion-content>
 </ion-view>
 <!-- </ion-modal-view> -->

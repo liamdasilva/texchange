@@ -1,7 +1,7 @@
-<ion-view view-title="Edit Entry">
+<ion-view view-title="{{viewTitle}}">
   <ion-content class = "padding">
-    <h4 ng-show = !posting.visibility align = "center" class="title">This post is currently visible to only you.</h4>
-    <h4 ng-show = posting.visibility align = "center" class="title">This post is publicly visible.</h4>
+    <h4 ng-show = !posting.visibility align = "center" class="title notVisible darkTeal">This post is currently visible to only you.</h4>
+    <h4 ng-show = posting.visibility align = "center" class="title darkTeal">This post is publicly visible.</h4>
     <form name = myForm>
       <ion-list ion-list-inset>
         <label class="item item-input">
@@ -9,8 +9,8 @@
           <input type="text" name = "courseCode" placeholder = "Course Code" ng-model="form.courseCode" required>
         </label>
         <label class="item item-input">
-          <span class="input-label">Textbook Name</span>
-          <input type="text" name = "title" placeholder = "Textbook Name" ng-model="form.title" required>
+          <span class="input-label">Title</span>
+          <input type="text" name = "title" placeholder = "Title" ng-model="form.title" required>
         </label>
         <label class="item item-input">
           <span ng-if ="mode == 'Buyer'"class="input-label">Looking Price</span>
