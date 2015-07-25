@@ -1,5 +1,5 @@
 angular.module('app.controllers')
-
+//controls the view posting page - where you can view all of one persons posts
 .controller('ViewPostingsCtrl', ['$scope','$ionicLoading', '$stateParams','$state','viewPosting','conversationsService',function($scope,$ionicLoading, $stateParams,$state,viewPosting,conversationsService) {
    $scope.conversations = [];
    if (conversationsService.getConversations().length ==0){

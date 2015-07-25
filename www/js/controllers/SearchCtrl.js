@@ -1,6 +1,6 @@
 angular.module('app.controllers')
 //controls the search page
-.controller('SearchCtrl', ['$scope','$window','viewPosting',function($scope,$window,viewPosting) {
+.controller('SearchCtrl', ['$scope','viewPosting',function($scope,viewPosting) {
   // var user = Parse.User.current();
   $scope.search = {};
   $scope.search.option = "Buying";
@@ -27,11 +27,7 @@ angular.module('app.controllers')
       });
     }
   }
-
-  $scope.refresh = function(){
-    $window.location.reload();
-  }
-
+  //set mode of search and the post data into the viewPostings service 
   $scope.sendPost = function(index){
     console.log($scope.results[index]);
     viewPosting.setPosting($scope.results[index]);

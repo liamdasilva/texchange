@@ -10,7 +10,7 @@ angular.module('app.controllers')
     var alertPopup = $ionicPopup.alert({
       title: title,
       template: content,
-      type: 'button-energized'
+      okType: 'energized'
     });
     alertPopup.then(function(res) {
       console.log(content);

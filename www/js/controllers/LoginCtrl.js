@@ -19,7 +19,7 @@ angular.module('app.controllers')
     var alertPopup = $ionicPopup.alert({
       title: title,
       template: content,
-      type: 'button-energized'
+      okType: 'energized'
     });
     alertPopup.then(function(res) {
       console.log(content);
@@ -30,6 +30,7 @@ angular.module('app.controllers')
   $scope.loginData = {};
   $scope.loginData.username="";
   $scope.loginData.password="";
+  $scope.loginError = "";
 
   // Form data for the signup modal
   $scope.signUpData = {};
@@ -64,6 +65,7 @@ angular.module('app.controllers')
     console.log('Doing login');
     Parse.User.logIn($scope.loginData.username, $scope.loginData.password,{
       success: function(user){
+        $scope.loginError = "";
         $scope.name = user.get("firstName");
         $scope.showAlert("Success","Hello " + $scope.name + ", you are now logged in.");
         $ionicHistory.nextViewOptions({
@@ -72,7 +74,7 @@ angular.module('app.controllers')
         $state.go('app.dashboard');
       },
       error:function(user,error){
-        $scope.showAlert("Error",error.message);
+        $scope.loginError = "Error: "+error.message;
       }
     });
   };

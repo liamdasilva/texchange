@@ -7,6 +7,7 @@
     </div>
   </ion-header-bar>
   <ion-content>
+    <h4 align = "center" ng-show = "loginError.length!=0" class = errorMessage>{{loginError}}</h4>
     <form novalidate>
       <ion-list ion-list-inset>
         <label class="item item-input">
@@ -21,7 +22,6 @@
       <button class="button button-block button-dark" ng-click="doLogin()">Log in</button>
       <button class="button button-block button-dark" ng-click = "signup()">New here? Sign Up!</button>
     </form>
-    
   </ion-content>
 </ion-view>
 <!-- </ion-modal-view> -->

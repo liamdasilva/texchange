@@ -1,11 +1,12 @@
 angular.module('app.controllers')
-
+//controls the single post view page
 .controller('SingleEntryCtrl', ['$scope', '$stateParams','$state','dashboardEntries','viewPosting',function($scope, $stateParams,$state,dashboardEntries,viewPosting) {
   if (dashboardEntries.getIndex() == -1){
     $state.go('app.dashboard');
   }
+  //set the mode (buying or selling)
   $scope.mode = dashboardEntries.getTableName();
-  //console.log($scope.mode);
+  //get the current post data
   var i = dashboardEntries.getIndex();
   if ($scope.mode == "Buyer"){
     $scope.posting = dashboardEntries.getBuying()[i];
@@ -28,7 +29,7 @@ angular.module('app.controllers')
       console.log(error);
     });
   }
-
+  //set mode of search and the post data into the viewPostings service 
   $scope.sendPost = function(index){
     viewPosting.setPosting($scope.buyers[index]);
     if($scope.mode == "Buyer")
