@@ -1,28 +1,30 @@
 angular.module('app.services', [])
 
 .service('conversationsService', function () {
+  // Sends the conversations objects between controllers
   var user = Parse.User.current();
-  var conversationsHistory = {
-    conversations:[],
-    lastMessage: null
-  };
+  var conversationsHistory = [];
   return {
+    // returns all the conversations stored in this service.
     getConversations: function () {
-      return conversationsHistory.conversations;
+      return conversationsHistory;
     },
     addConversation: function (inName, inUserID, inConversationID) {
+      //adds a new conversation object to this service using our format for the object.
       var newConversationObject = {
           updatedAt: null,
           name: inName,
           userID: inUserID,
           id: inConversationID
         };
-      conversationsHistory.conversations.push(newConversationObject);
+      conversationsHistory.push(newConversationObject);
     },
     setConversations: function (conversations) {
+      // sets the conversation history given an array of conversation objects.
       conversationsHistory = conversations;
     },
     getConversation: function(ID) {
+      // returns a conversation object from the history given the conversation ID
       result = null;
       conversationsHistory.forEach(function(conversation) {
         if (conversation.id === ID) result = conversation;
@@ -30,8 +32,9 @@ angular.module('app.services', [])
       return result
     },
     getConversationID: function(userID) {
+      // returns a conversation object given the id of the other user in this conversation/
       result = null;
-      conversationsHistory.conversations.forEach(function(conversation) {
+      conversationsHistory.forEach(function(conversation) {
         if (conversation.userID === userID) result = conversation;
       })
       return result
