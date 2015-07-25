@@ -20,15 +20,15 @@
   };
 }])
   
- .controller('LoginCtrl', ['$scope', '$ionicModal','dashboardEntries', '$ionicHistory', '$state', function($scope, $ionicModal,dashboardEntries, $ionicHistory,$state) {
-  $scope.$on('$ionicView.enter', function(e) {
-    if(Parse.User.current()){
-      $ionicHistory.nextViewOptions({
-        disableBack: true
-      });
-      $state.go('app.dashboard');
-    }
-  });
+  .controller('LoginCtrl', ['$scope', '$ionicModal','dashboardEntries', '$ionicHistory', '$state', function($scope, $ionicModal,dashboardEntries, $ionicHistory,$state) {
+    $scope.$on('$ionicView.enter', function(e) {
+      if(Parse.User.current()){
+        $ionicHistory.nextViewOptions({
+          disableBack: true
+        });
+        $state.go('app.dashboard');
+      }
+    });
   // Form data for the login view
   $scope.loginData = {};
   $scope.loginData.username="";
@@ -120,32 +120,32 @@
       !$scope.signUpData.firstName.length ||
       !$scope.signUpData.password.length ||
       !$scope.signUpData.email.length) {
-          $scope.incomplete = true;
-    }
-  };
+      $scope.incomplete = true;
+  }
+};
 
-  $scope.doSignUp = function() {
-    console.log('Doing signup');
-    signUpNewUser($scope.signUpData).then(
-      function(result){
-        alert("You successfully signed up!");
-        $scope.closeSignup();
-        $scope.signUpData.username="";
-        $scope.signUpData.email="";
-        $scope.signUpData.firstName="";
-        $scope.signUpData.lastName="";
-        $scope.signUpData.password="";
-        $scope.signUpData.passwordc="";
-        $scope.signUpErrorMessage = "";
-        $scope.signUpError = false;
-        $scope.passMatch = true;
-        $scope.incomplete = true;
-        $scope.closeLogin();
+$scope.doSignUp = function() {
+  console.log('Doing signup');
+  signUpNewUser($scope.signUpData).then(
+    function(result){
+      alert("You successfully signed up!");
+      $scope.closeSignup();
+      $scope.signUpData.username="";
+      $scope.signUpData.email="";
+      $scope.signUpData.firstName="";
+      $scope.signUpData.lastName="";
+      $scope.signUpData.password="";
+      $scope.signUpData.passwordc="";
+      $scope.signUpErrorMessage = "";
+      $scope.signUpError = false;
+      $scope.passMatch = true;
+      $scope.incomplete = true;
+      $scope.closeLogin();
     },function(error){
       $scope.signUpErrorMessage = error;
       $scope.signUpError = true;
     });
-  };
+};
 }])
 
 
@@ -185,7 +185,7 @@
     }
   }])
 
-  .controller('SearchCtrl', ['$scope','$window',function($scope,$window) {
+  .controller('SearchCtrl', ['$scope','$window','viewPosting',function($scope,$window,viewPosting) {
    // var user = Parse.User.current();
    $scope.search = {};
    $scope.search.option = "Buying";
@@ -196,9 +196,7 @@
       console.log($scope.search.option);
       if ($scope.search.option == "Buying"){
         getAllPostsByTitle($scope.search.text, "Buyer").then(function(result){
-          console.log(result[0]);
           $scope.results  = result;
-
           $scope.noResults = $scope.results.length == 0;
           $scope.$apply();
 
@@ -209,7 +207,7 @@
       else if ($scope.search.option == "Selling"){
         getAllPostsByTitle($scope.search.text, "Seller").then(function(result){
           $scope.results  = result;
-          console.log($scope.results.length);
+        // console.log($scope.results.length);
           $scope.noResults = $scope.results.length == 0;
           $scope.$apply();
 
@@ -223,6 +221,17 @@
     $scope.refresh = function(){
       $window.location.reload();
     }
+
+    $scope.sendPost = function(index){
+      console.log($scope.results[index]);
+      viewPosting.setPosting($scope.results[index]);
+      if($scope.search.option == "Buying")
+        viewPosting.setTableName("Buyer");
+      else{
+        viewPosting.setTableName("Seller");
+      }
+    }
+
   }])
 
 
@@ -379,14 +388,14 @@ $scope.$on("$destroy", function (event) {
 
 }])
 
-.controller('NewPostingCtrl', ['$scope','$state','dashboardEntries',function($scope,$state,dashboardEntries) {
-  $scope.posting = {};
-  $scope.posting.courseCode = "";
-  $scope.posting.price = "";
-  $scope.posting.edition = "";
-  $scope.posting.title = "";
-  $scope.posting.condition = "Good";
-  $scope.mode = dashboardEntries.getTableName();
+  .controller('NewPostingCtrl', ['$scope','$state','dashboardEntries',function($scope,$state,dashboardEntries) {
+    $scope.posting = {};
+    $scope.posting.courseCode = "";
+    $scope.posting.price = "";
+    $scope.posting.edition = "";
+    $scope.posting.title = "";
+    $scope.posting.condition = "Good";
+    $scope.mode = dashboardEntries.getTableName();
   //console.log($scope.mode);
 
   $scope.save = function(){
@@ -424,11 +433,11 @@ $scope.$on("$destroy", function (event) {
   }
 }])
 
-.controller('SingleEntryCtrl', ['$scope', '$stateParams','$state','dashboardEntries','viewPosting',function($scope, $stateParams,$state,dashboardEntries,viewPosting) {
-  if (dashboardEntries.getIndex() == -1){
-    $state.go('app.dashboard');
-  }
-  $scope.mode = dashboardEntries.getTableName();
+  .controller('SingleEntryCtrl', ['$scope', '$stateParams','$state','dashboardEntries','viewPosting',function($scope, $stateParams,$state,dashboardEntries,viewPosting) {
+    if (dashboardEntries.getIndex() == -1){
+      $state.go('app.dashboard');
+    }
+    $scope.mode = dashboardEntries.getTableName();
   //console.log($scope.mode);
   var i = dashboardEntries.getIndex();
   if ($scope.mode == "Buyer"){
@@ -461,12 +470,12 @@ $scope.$on("$destroy", function (event) {
   }
 }])
 
-.controller('EditEntryCtrl', ['$scope', '$ionicHistory','$stateParams','$state','dashboardEntries',function($scope, $ionicHistory,$stateParams,$state,dashboardEntries) {
-  if (dashboardEntries.getIndex() == -1){
-    $state.go('app.dashboard');
-  }
-  $scope.form={};
-  $scope.mode = dashboardEntries.getTableName();
+  .controller('EditEntryCtrl', ['$scope', '$ionicHistory','$stateParams','$state','dashboardEntries',function($scope, $ionicHistory,$stateParams,$state,dashboardEntries) {
+    if (dashboardEntries.getIndex() == -1){
+      $state.go('app.dashboard');
+    }
+    $scope.form={};
+    $scope.mode = dashboardEntries.getTableName();
   //console.log($scope.mode);
   var i = dashboardEntries.getIndex();
   if ($scope.mode == "Buyer"){
@@ -487,28 +496,28 @@ $scope.$on("$destroy", function (event) {
     $scope.posting.price = $scope.form.price;
     if ($scope.mode == "Seller"){$scope.posting.condition = $scope.form.condition;}
     updatePostingById($scope.mode,$stateParams.objectId,$scope.posting).then(function(result,object){
-        alert(result);
-        $ionicHistory.nextViewOptions({
-          disableBack: true
-        });
-        $state.go('app.dashboard');
+      alert(result);
+      $ionicHistory.nextViewOptions({
+        disableBack: true
+      });
+      $state.go('app.dashboard');
     },function(error){
       alert(error);
     });
   }
   $scope.delete = function(){
     deletePostingById($scope.mode,$stateParams.objectId).then(function(result){
-        alert(result);
-        if ($scope.mode == "Buyer"){
-          dashboardEntries.getBuying().splice(i,1);
-        }else{
-          dashboardEntries.getSelling().splice(i,1);
-        }
-        $scope.$apply();
-        $ionicHistory.nextViewOptions({
-          disableBack: true
-        });
-        $state.go('app.dashboard');
+      alert(result);
+      if ($scope.mode == "Buyer"){
+        dashboardEntries.getBuying().splice(i,1);
+      }else{
+        dashboardEntries.getSelling().splice(i,1);
+      }
+      $scope.$apply();
+      $ionicHistory.nextViewOptions({
+        disableBack: true
+      });
+      $state.go('app.dashboard');
     },function(error){
       alert(error);
     });
@@ -533,10 +542,10 @@ $scope.$on("$destroy", function (event) {
   }
 }])
 
-.controller('ViewPostingsCtrl', ['$scope', '$stateParams','$state','viewPosting',function($scope, $stateParams,$state,viewPosting) {
-  
-  $scope.objectId = $stateParams.objectId;
-  $scope.posting = viewPosting.getPosting();
-  $scope.mode = viewPosting.getTableName();
-  
-}]);
+  .controller('ViewPostingsCtrl', ['$scope', '$stateParams','$state','viewPosting',function($scope, $stateParams,$state,viewPosting) {
+
+    $scope.objectId = $stateParams.objectId;
+    $scope.posting = viewPosting.getPosting();
+    $scope.mode = viewPosting.getTableName();
+
+  }]);
