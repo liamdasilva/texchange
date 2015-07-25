@@ -1,7 +1,4 @@
-<ion-view >
-  <ion-nav-title>
-      <p>{{posting.author.name}}</p>
-  </ion-nav-title>
+<ion-view view-title = "{{author.firstName}} {{author.lastName}}">
   <ion-content class = "padding">
     <form name = myForm>
       <ion-list ion-list-inset>
@@ -28,34 +25,34 @@
         </label>
       </ion-list>
     </form>
-    <div ng-if ="mode == 'Seller'">
-      <h4 ng-if = "buyers.length!=1">This person has {{buyers.length}} buyers:</h4>
-      <h4 ng-if = "buyers.length==1">There is 1 buyer:</h4>
-      <ion-list>
-        <ion-item ng-repeat="buyer in buyers">
-          {{buyer.author.firstName}} {{buyer.author.lastName}} -
-          {{buyer.title}} - Looking price: {{buyer.price|currency}}
-        </ion-item>
-        <ion-item ng-show="buyers.length==0">
-          <div class=errorMessage >No current buyers</div>
-        </ion-item>
-      </ion-list>
-    </div>
-
-    <div ng-if ="mode == 'Buyer'">
-      <h4 ng-if = "sellers.length!=1">There are {{sellers.length}} sellers:</h4>
-      <h4 ng-if = "sellers.length==1">There is 1 seller:</h4>
-      <ion-list>
-        <ion-item ng-repeat="seller in sellers">
-          {{seller.author.firstName}} {{seller.author.lastName}} -
-          {{seller.title}} - Asking price: {{seller.price|currency}}
-        </ion-item>
-        <ion-item ng-show="sellers.length==0">
-          <div class=errorMessage >No current sellers</div>
-        </ion-item>
-      </ion-list>
-    </div>
-
     
+    <h4>{{author.firstName}} is also:</h4>
+    <ion-list>
+      <ion-list>
+      <ion-item class = "item-divider">
+          Buying
+        </ion-item>
+      <ion-item ng-repeat="buyPost in entries.buying">
+        <div ng-if="buyPost.objectId != pageId">
+        {{buyPost.courseCode}}
+          - {{buyPost.title}}
+        </div>
+      </ion-item>
+      <ion-item ng-show="entries.buying.length==0">
+        <div class=errorMessage >No other buy postings</div>
+      </ion-item>
+      <ion-item class = "item-divider">
+        Selling
+      </ion-item>
+      <ion-item ng-repeat="sellPost in entries.selling">
+        <div ng-if="sellPost.objectId != pageId">
+        {{sellPost.courseCode}}
+          - {{sellPost.title}}
+        </div>
+      </ion-item>
+      <ion-item ng-show="entries.selling.length==0">
+        <div class=errorMessage>No other sell postings</div>
+      </ion-item>
+    </ion-list>
   </ion-content>
 </ion-view>

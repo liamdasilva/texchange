@@ -32,6 +32,7 @@ var getPostingsByCourseCode = function(tableName, courseCode){
     for (var i = 0; i < results.length; i++) {
       var object = results[i].toJSON();
       object.author = results[i].get("author").toJSON();
+      object.parseAuthor = results[i].get("author");
       postings.push(object);
     }
     //fires the .then() in the code calling this function

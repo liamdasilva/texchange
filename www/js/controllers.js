@@ -533,10 +533,44 @@ $scope.$on("$destroy", function (event) {
   }
 }])
 
-.controller('ViewPostingsCtrl', ['$scope', '$stateParams','$state','viewPosting',function($scope, $stateParams,$state,viewPosting) {
-  
-  $scope.objectId = $stateParams.objectId;
+.controller('ViewPostingsCtrl', ['$scope','$ionicLoading', '$stateParams','$state','viewPosting',function($scope,$ionicLoading, $stateParams,$state,viewPosting) {
+  $ionicLoading.show({
+    content: 'Loading',
+    animation: 'fade-in',
+    showBackdrop: true,
+    maxWidth: 200,
+    showDelay: 0
+  });
+  $scope.pageId = $stateParams.objectId;
   $scope.posting = viewPosting.getPosting();
+  $scope.author = $scope.posting.author;
   $scope.mode = viewPosting.getTableName();
+  $scope.entries = {};
+  
+  getPostings("Buyer",$scope.posting.parseAuthor).then(function(result){
+    $scope.entries.buying = result;
+    $scope.entries.buying = $scope.entries.buying.filter(function(el){
+      return el.objectId != $scope.pageId;
+    });
+    
+  }, function(error){
+    console.log(error);
+  });
+  getPostings("Seller",$scope.posting.parseAuthor).then(function(result){
+    $scope.entries.selling = result;
+    $scope.entries.selling = $scope.entries.selling.filter(function(el){
+      return el.objectId != $scope.pageId;
+    });
+    $ionicLoading.hide();
+  }, function(error){
+    console.log(error);
+  });
+
+  $scope.refresh = function(){
+    $scope.entries = {};
+    $scope.entries.buying = dashboardEntries.getBuying();
+    $scope.entries.selling = dashboardEntries.getSelling();
+    $scope.$broadcast("scroll.refreshComplete");
+  }
   
 }]);
