@@ -15,7 +15,6 @@ angular.module('app.controllers')
        $scope.conversations = getOtherConversationUser(result);
        conversationsService.setConversations($scope.conversations);
        $scope.conversations = conversationsService.getConversation($scope.conversationID);
-       console.log($scope.conversations);
        $scope.$apply();
      }, function(error){
       alert(error);
@@ -74,11 +73,10 @@ angular.module('app.controllers')
     stop = $interval(function() {
       //calls the function which updates the message.
       updateMessages($scope.conversationID, lastUpdated, $scope.conversations.userID).then(function(result){
-        console.log(result);
       //updates lastUpdated since messages have been updated.
     //  $scope.History =  $scope.History.concat(result); 
 
-      lastUpdated = new Date();
+    lastUpdated = new Date();
       //Adds all the new messages to our history list.
       //The following double for loop checks for duplicate messages, which may occur for overlapping update calls
       // by the interval.
@@ -91,21 +89,20 @@ angular.module('app.controllers')
         }
         if (pushFlag){
           $scope.History.push(result[i]);
+          $scope.$apply();
+          $scope.scrollToBottom();
         }
         pushFlag = true;
-      }
-          
-        
 
-    $scope.$broadcast('scroll.refreshComplete');
+      }
+     // $scope.$broadcast('scroll.refreshComplete');
       // apply the changes to the view and go to the bottom.
-      $scope.$apply();
-      $scope.scrollToBottom();
+
     });       
     }, 5000);
-  };
+};
 
-  $scope.stopUpdate = function() {
+$scope.stopUpdate = function() {
     //when the view is left, the will destroy the interval, so that the system won't continue querying the server.
     if (angular.isDefined(stop)) {
       $interval.cancel(stop);
