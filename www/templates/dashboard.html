@@ -8,7 +8,7 @@
     	<ion-item class = "item-divider item-energized">
       		You're Buying
   	  	</ion-item>
-	    <ion-item ng-repeat="buyPost in entries.buying" ng-class="{'notVisible': !buyPost.visibility}" ng-click="setMode('Buyer',$index)" href="#/app/single/{{buyPost.objectId}}">
+	    <ion-item ng-repeat="buyPost in entries.buying" ng-class="{'postNotVisible': !buyPost.visibility}" ng-click="setMode('Buyer',$index)" href="#/app/single/{{buyPost.objectId}}">
 	    	{{buyPost.courseCode}}
 	        - {{buyPost.title}}
 	    </ion-item>
@@ -18,7 +18,7 @@
 	    <ion-item class = "item-divider item-energized">
 	    	You're Selling
 	  	</ion-item>
-	  	<ion-item ng-repeat="sellPost in entries.selling" ng-class="{'notVisible': !sellPost.visibility}" ng-click="setMode('Seller',$index)" href="#/app/single/{{sellPost.objectId}}">
+	  	<ion-item ng-repeat="sellPost in entries.selling" ng-class="{'postNotVisible': !sellPost.visibility}" ng-click="setMode('Seller',$index)" href="#/app/single/{{sellPost.objectId}}">
 	    	{{sellPost.courseCode}}
 	        - {{sellPost.title}}
 	    </ion-item>
