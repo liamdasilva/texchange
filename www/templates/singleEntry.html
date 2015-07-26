@@ -37,7 +37,8 @@
       <h4 ng-if = "buyers.length==1" class = "darkTeal">There is 1 buyer:</h4>
       <ion-list>
         <ion-item ng-repeat="buyer in buyers" ng-click = "sendPost($index)" href="#/app/viewPostings/{{buyer.objectId}}">
-          {{buyer.price|currency}} - {{buyer.title}}
+          {{buyer.author.firstName}} {{buyer.author.lastName}} -
+           {{buyer.price|currency}} - {{buyer.title}}
         </ion-item>
         <ion-item ng-show="buyers.length==0">
           <div class=errorMessage >No current buyers</div>
@@ -51,7 +52,7 @@
       <ion-list>
         <ion-item ng-repeat="seller in sellers" ng-click = "sendPost($index)" href="#/app/viewPostings/{{seller.objectId}}">
           {{seller.author.firstName}} {{seller.author.lastName}} -
-          {{seller.title}} - Asking price: {{seller.price|currency}}
+           {{seller.price|currency}} - {{seller.title}}
         </ion-item>
         <ion-item ng-show="sellers.length==0">
           <div class=errorMessage >No current sellers</div>
