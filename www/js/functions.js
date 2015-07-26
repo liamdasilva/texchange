@@ -444,7 +444,7 @@ var updateMessages = function(conversationID, lastUpdated, otherUserID){
   // last updated.
  var query = new Parse.Query("Messages");
  query.equalTo("ConversationID", conversationID);
- query.notEqualTo("Sender", Parse.User.current());
+ //query.notEqualTo("Sender", Parse.User.current());
   query.ascending("createdAt");
   //set up a promise to return
   var promise = new Parse.Promise();
