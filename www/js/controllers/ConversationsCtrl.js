@@ -7,6 +7,8 @@ angular.module('app.controllers')
      $scope.conversations = getOtherConversationUser(result);
      conversationsService.setConversations($scope.conversations);
      noConversations = $scope.conversations.length == 0;
+          $scope.$apply();
+
    }, function(error){
     alert(error);
   });

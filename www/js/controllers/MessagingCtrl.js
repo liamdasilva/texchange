@@ -20,7 +20,7 @@ angular.module('app.controllers')
      }, function(error){
       alert(error);
     });
-  }else{
+    }else{
     //if the conversations service has been set, then use it.
     $scope.conversations = conversationsService.getConversation($scope.conversationID);
   }
@@ -73,17 +73,36 @@ angular.module('app.controllers')
     //starts the interval if it has not already been defined.
     stop = $interval(function() {
       //calls the function which updates the message.
-     updateMessages($scope.conversationID, lastUpdated, $scope.conversations.userID).then(function(result){
+      updateMessages($scope.conversationID, lastUpdated, $scope.conversations.userID).then(function(result){
+        console.log(result);
       //updates lastUpdated since messages have been updated.
+    //  $scope.History =  $scope.History.concat(result); 
+
       lastUpdated = new Date();
       //Adds all the new messages to our history list.
-      $scope.History =  $scope.History.concat(result); 
-      $scope.$broadcast('scroll.refreshComplete');
+      //The following double for loop checks for duplicate messages, which may occur for overlapping update calls
+      // by the interval.
+      var pushFlag = true;
+      for ( i =result.length-1;i >=0;i--){
+        for ( j = $scope.History.length-1; j>=0;j--){
+          if (result[i].objectId == $scope.History[j].objectId){
+            pushFlag = false;
+          }
+        }
+        if (pushFlag){
+          $scope.History.push(result[i]);
+        }
+        pushFlag = true;
+      }
+          
+        
+
+    $scope.$broadcast('scroll.refreshComplete');
       // apply the changes to the view and go to the bottom.
       $scope.$apply();
       $scope.scrollToBottom();
     });       
-   }, 5000);
+    }, 5000);
   };
 
   $scope.stopUpdate = function() {
