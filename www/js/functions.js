@@ -392,10 +392,8 @@ var getAllPostsByTitle = function(search, tableName){
       object.parseAuthor = results[i].get("author");
 
       postings.push(object);
-     // console.log(messages);
    }
    promise.resolve(postings);
-    //  console.log(conversations[0].user1.objectId);
   },function(error){
       //fires the error part in the .then() in the code calling this function
       promise.reject("Error: " + error.message);
@@ -444,20 +442,15 @@ var updateMessages = function(conversationID, lastUpdated, otherUserID){
   // last updated.
  var query = new Parse.Query("Messages");
  query.equalTo("ConversationID", conversationID);
- //query.notEqualTo("Sender", Parse.User.current());
   query.ascending("createdAt");
   //set up a promise to return
   var promise = new Parse.Promise();
   var updatedHistory =[];
   query.greaterThan("createdAt",lastUpdated)
   query.find().then(function(results) {
-    console.log(results.length);
-    console.log("Lastupdated: "+lastUpdated);
-
     for (var i = 0; i < results.length; i++) {
       var object = results[i].toJSON();
       updatedHistory.push(object);
-      console.log(object.createdAt);
    }
    promise.resolve(updatedHistory);
   },function(error){
