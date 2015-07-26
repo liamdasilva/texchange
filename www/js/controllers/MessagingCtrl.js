@@ -4,22 +4,22 @@ angular.module('app.controllers')
 .controller('MessagingCtrl', ['$scope', '$stateParams','$state','$window', '$ionicScrollDelegate','$timeout','conversationsService','$interval',function($scope, $stateParams,$state, $window, $ionicScrollDelegate,$timeout, conversationsService,$interval) {
   var currentUser = Parse.User.current();
   if (!currentUser) { $state.go('app');}
-  lastUpdated = new Date(); // sets lastUpdated to now
-  // the conversation will update as soon as the messaging view is activated.
-  $scope.conversations = conversationsService.getConversation(); // gets the conversations from the conversations service.
-  $scope.conversationID = $stateParams.conversationID; // sets the conversation id for this specific conversation thread.
-  // Mostly for debugging, if the conversationsService hasn't been set before reaching this view,
-  // it MUST update to get the name, userID, and conversation id to be used by this system.
-  if (conversationsService.getConversations().length == 0){
-    getConversations().then(function(result){
-     $scope.conversations = getOtherConversationUser(result);
-     conversationsService.setConversations($scope.conversations);
-     $scope.conversations = conversationsService.getConversation($scope.conversationID);
-     console.log($scope.conversations);
-     $scope.$apply();
-   }, function(error){
-    alert(error);
-  });
+    lastUpdated = new Date(); // sets lastUpdated to now
+    // the conversation will update as soon as the messaging view is activated.
+    $scope.conversations = conversationsService.getConversation(); // gets the conversations from the conversations service.
+    $scope.conversationID = $stateParams.conversationID; // sets the conversation id for this specific conversation thread.
+    // Mostly for debugging, if the conversationsService hasn't been set before reaching this view,
+    // it MUST update to get the name, userID, and conversation id to be used by this system.
+    if (conversationsService.getConversations().length == 0){
+      getConversations().then(function(result){
+       $scope.conversations = getOtherConversationUser(result);
+       conversationsService.setConversations($scope.conversations);
+       $scope.conversations = conversationsService.getConversation($scope.conversationID);
+       console.log($scope.conversations);
+       $scope.$apply();
+     }, function(error){
+      alert(error);
+    });
   }else{
     //if the conversations service has been set, then use it.
     $scope.conversations = conversationsService.getConversation($scope.conversationID);
@@ -59,6 +59,7 @@ angular.module('app.controllers')
     //from the server, update the lastUpdated time.
     $scope.scrollToBottom();
     lastUpdated = new Date();
+    lastUpdated.setSeconds(lastUpdated.getSeconds() + 2);
     $scope.update();
 
   }, function(error){
@@ -76,6 +77,7 @@ angular.module('app.controllers')
      updateMessages($scope.conversationID, lastUpdated, $scope.conversations.userID).then(function(result){
       //updates lastUpdated since messages have been updated.
       lastUpdated = new Date();
+      lastUpdated.setSeconds(lastUpdated.getSeconds() + 2);
       //Adds all the new messages to our history list.
       $scope.History =  $scope.History.concat(result); 
       $scope.$broadcast('scroll.refreshComplete');
