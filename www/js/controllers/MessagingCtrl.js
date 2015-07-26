@@ -59,7 +59,6 @@ angular.module('app.controllers')
     //from the server, update the lastUpdated time.
     $scope.scrollToBottom();
     lastUpdated = new Date();
-    lastUpdated.setSeconds(lastUpdated.getSeconds() + 2);
     $scope.update();
 
   }, function(error){
@@ -77,7 +76,6 @@ angular.module('app.controllers')
      updateMessages($scope.conversationID, lastUpdated, $scope.conversations.userID).then(function(result){
       //updates lastUpdated since messages have been updated.
       lastUpdated = new Date();
-      lastUpdated.setSeconds(lastUpdated.getSeconds() + 2);
       //Adds all the new messages to our history list.
       $scope.History =  $scope.History.concat(result); 
       $scope.$broadcast('scroll.refreshComplete');
