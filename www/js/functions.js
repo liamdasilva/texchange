@@ -337,10 +337,8 @@ var saveMessageToParse = function(messageText, conversationID, receiverID){
    }),
   error: (function(error) {
     console.log(error);
-    // error is a Parse.Error with an error code and message.
   })
 })
-  //console.log(message.toJSON());
   return promise;
   
 }

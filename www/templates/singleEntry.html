@@ -49,7 +49,7 @@
       <h4 ng-if = "sellers.length!=1" class = "darkTeal">There are {{sellers.length}} sellers:</h4>
       <h4 ng-if = "sellers.length==1" class = "darkTeal">There is 1 seller:</h4>
       <ion-list>
-        <ion-item ng-repeat="seller in sellers">
+        <ion-item ng-repeat="seller in sellers" ng-click = "sendPost($index)" href="#/app/viewPostings/{{seller.objectId}}">
           {{seller.author.firstName}} {{seller.author.lastName}} -
           {{seller.title}} - Asking price: {{seller.price|currency}}
         </ion-item>

@@ -31,10 +31,12 @@ angular.module('app.controllers')
   }
   //set mode of search and the post data into the viewPostings service 
   $scope.sendPost = function(index){
-    viewPosting.setPosting($scope.buyers[index]);
-    if($scope.mode == "Buyer")
+   if($scope.mode == "Buyer"){
       viewPosting.setTableName("Seller");
+        viewPosting.setPosting($scope.sellers[index]);
+}
     else{
+          viewPosting.setPosting($scope.buyers[index]);
       viewPosting.setTableName("Buyer");
     }
   }
